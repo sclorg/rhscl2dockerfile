@@ -1,0 +1,58 @@
+templates:
+  # for each distribution, declare a list of filename mappings
+  # <Template> : <Output-Filename>
+  rhel6:
+    Dockerfile.RHEL6.template: Dockerfile
+    enable.sh: enable{{collection}}.sh
+    README.template: README.md
+  rhel7:
+    Dockerfile.RHEL7.template: Dockerfile
+    enable.sh: enable{{collection}}.sh
+    README.template: README.md
+
+# For each collection, define packages parameter to yum install plus
+# list of ports to expose.  The SCL collection name must be defined if
+# not the name used here.
+collections:
+  mariadb55:
+    install: mariadb55
+    expose: [3306]
+  mysql55:
+    install: mysql55
+    expose: [3306]
+  mongodb24:
+    install: mongodb24
+    expose: [27017, 28017]
+  httpd24:
+    install: httpd24
+    expose: [80, 443]
+  httpd24-php55:
+    collection: httpd24
+    install: httpd24 php55
+    expose: [80, 443]
+  httpd24-python27:
+    collection: httpd24
+    install: httpd24 python27
+    expose: [80, 443]
+  httpd24-python33:
+    collection: httpd24
+    install: httpd24 python33
+    expose: [80, 443]
+  httpd24-perl516:
+    collection: httpd24
+    # exclude Pg-tests to prevent pulling in postgresql-server
+    install: httpd24 perl516 --exclude perl516-perl-DBD-Pg-tests
+    expose: [80, 443]
+  nginx14:
+    install: nginx14
+    expose: [80, 443]
+  nginx16:
+    install: nginx16
+    expose: [80, 443]
+  ruby200-ror40:
+    collection: ror40
+    install: ruby200 ror40
+  postgresql92:
+    install: postgresql92
+    expose: [5432]
+
