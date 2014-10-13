@@ -40,8 +40,7 @@ collections:
     expose: [80, 443]
   httpd24-perl516:
     collection: httpd24
-    # exclude Pg-tests to prevent pulling in postgresql-server
-    install: httpd24 perl516 --exclude perl516-perl-DBD-Pg-tests
+    install: httpd24 perl516 
     expose: [80, 443]
   nginx14:
     install: nginx14
@@ -49,6 +48,15 @@ collections:
   nginx16:
     install: nginx16
     expose: [80, 443]
+  nodejs010:
+    install: nodejs010
+    expose: [80]
+  php54:
+    install: php54
+  ruby193:
+    install: ruby193
+  ruby200:
+    install: ruby200
   ruby200-ror40:
     collection: ror40
     install: ruby200 ror40
