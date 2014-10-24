@@ -1,5 +1,5 @@
-Software Collection {{ install }} Dockerfile
-===============
+Software Collection {{ collection }} Dockerfile
+===================
 
 Build
 -----
@@ -10,5 +10,5 @@ system with Software Collections entitlements available.
 Run
 -----
 
-docker run -t -i {{ install }} /bin/bash
+docker run -t -i {{ collection }} /bin/bash
 
