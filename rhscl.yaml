@@ -28,7 +28,7 @@ collections:
     expose: [80, 443]
   httpd24-php55:
     collection: httpd24
-    install: httpd24 php55
+    install: httpd24 php55 php55-php
     expose: [80, 443]
   httpd24-python27:
     collection: httpd24
@@ -36,13 +36,13 @@ collections:
     expose: [80, 443]
   httpd24-python33:
     collection: httpd24
-    install: httpd24 python33
+    install: httpd24 python33 python33-mod_wsgi
     expose: [80, 443]
   perl516:
     install: perl516
   httpd24-perl516:
     collection: httpd24
-    install: httpd24 perl516 
+    install: httpd24 perl516 perl516-mod_perl
     expose: [80, 443]
   nginx14:
     install: nginx14
