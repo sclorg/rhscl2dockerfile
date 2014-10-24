@@ -38,6 +38,8 @@ collections:
     collection: httpd24
     install: httpd24 python33
     expose: [80, 443]
+  perl516:
+    install: perl516
   httpd24-perl516:
     collection: httpd24
     install: httpd24 perl516 
