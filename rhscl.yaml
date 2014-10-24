@@ -55,6 +55,8 @@ collections:
     expose: [80]
   php54:
     install: php54
+  php55:
+    install: php55
   ruby193:
     install: ruby193
   ruby200:
