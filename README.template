@@ -1,5 +1,5 @@
 Software Collection {{ collection }} Dockerfile
-===================
+{{ '=' * (collection|length + 31) }}
 
 Build
 -----
