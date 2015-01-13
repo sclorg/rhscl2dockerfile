@@ -73,3 +73,8 @@ collections:
     install: python33
   ror40:
     install: ror40
+  devtoolset-3:
+    install: devtoolset-3
+  devtoolset-3-gcc:
+    collection: devtoolset-3
+    install: devtoolset-3-gcc
