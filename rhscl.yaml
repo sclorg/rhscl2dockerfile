@@ -78,3 +78,16 @@ collections:
   devtoolset-3-gcc:
     collection: devtoolset-3
     install: devtoolset-3-gcc
+  devtoolset-3-systemtap:
+    collection: devtoolset-3
+    install: devtoolset-3-systemtap
+    expose: [5353]
+  devtoolset-3-dyninst:
+    collection: devtoolset-3
+    install: devtoolset-3-dyninst
+  devtoolset-3-elfutils:
+    collection: devtoolset-3
+    install: devtoolset-3-elfutils
+  devtoolset-3-oprofile:
+    collection: devtoolset-3
+    install: devtoolset-3-oprofile
