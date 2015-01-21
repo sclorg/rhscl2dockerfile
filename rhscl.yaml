@@ -91,3 +91,6 @@ collections:
   devtoolset-3-oprofile:
     collection: devtoolset-3
     install: devtoolset-3-oprofile
+  devtoolset-3-valgrind:
+    collection: devtoolset-3
+    install: devtoolset-3-valgrind
