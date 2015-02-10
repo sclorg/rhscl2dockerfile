@@ -75,9 +75,9 @@ collections:
     install: ror40
   devtoolset-3:
     install: devtoolset-3
-  devtoolset-3-gcc:
+  devtoolset-3-toolchain:
     collection: devtoolset-3
-    install: devtoolset-3-gcc
+    install: devtoolset-3-gcc devtoolset-3-gcc-c++ devtoolset-3-gcc-gfortran devtoolset-3-gdb
   devtoolset-3-systemtap:
     collection: devtoolset-3
     install: devtoolset-3-systemtap
