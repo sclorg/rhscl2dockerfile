@@ -20,7 +20,7 @@ for coll, cvars in y["collections"].items():
         if 'collection' not in cvars:
             cvars["collection"] = coll
         if 'enable' not in cvars:
-            cvars["enable"] = coll
+            cvars["enable"] = cvars["collection"]
         for template, output in tvars.items():
             # Allow use of variables in output filenames as well as files
             output = outdir + "/" + Template(output).render(cvars)
