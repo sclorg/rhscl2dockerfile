@@ -109,7 +109,8 @@ collections:
     install: rh-mysql56
     expose: [3306]
   rh-passenger40:
-    install: rh-passenger40
+    install: rh-passenger40 rh-passenger40-ruby22
+    enable: rh-passenger40 rh-ruby22
   rh-perl520:
     install: rh-perl520
   rh-php56:
