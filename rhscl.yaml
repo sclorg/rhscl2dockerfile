@@ -24,7 +24,7 @@ templates:
 # For each container to define, define packages parameter to yum
 # install plus list of ports to expose.  The SCL collection name must
 # be defined if not the name used here.
-collections:
+containers:
   mariadb55:
     install: mariadb55
     expose: [3306]

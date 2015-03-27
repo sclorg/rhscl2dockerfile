@@ -9,7 +9,7 @@ y = yaml.safe_load(open('rhscl.yaml'))
 
 env = Environment(keep_trailing_newline=True)
 
-for coll, cvars in y["collections"].items():
+for coll, cvars in y["containers"].items():
     for tname, tvars in y["templates"].items():
         outdir = tname + "." + coll
         try:
