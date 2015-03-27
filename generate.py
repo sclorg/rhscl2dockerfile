@@ -17,6 +17,7 @@ for coll, cvars in y["collections"].items():
         except:
             pass
         # Set up collection variables which can be substituted in templates
+        cvars["container"] = coll
         if 'collection' not in cvars:
             cvars["collection"] = coll
         if 'enable' not in cvars:

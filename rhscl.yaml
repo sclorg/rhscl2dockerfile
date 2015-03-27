@@ -1,3 +1,14 @@
+# In templates, three variables are available:
+#
+#      <container>   -- the name of the container image
+#      <collection>  -- the name of the (main) SCL used in the container
+#      <install>     -- the set of packages to install
+#      <expose>      -- the set of ports to expose
+#      <enable>      -- the list of collection names which should be enabled
+#
+# By default, both "enable" and "collection" are set to the container name.
+# Each of these can be overriden in the template list below.
+
 templates:
   # for each distribution, declare a list of filename mappings
   # <Template> : <Output-Filename>
@@ -10,9 +21,9 @@ templates:
     enable.sh: enable{{collection}}.sh
     README.template: README.md
 
-# For each collection, define packages parameter to yum install plus
-# list of ports to expose.  The SCL collection name must be defined if
-# not the name used here.
+# For each container to define, define packages parameter to yum
+# install plus list of ports to expose.  The SCL collection name must
+# be defined if not the name used here.
 collections:
   mariadb55:
     install: mariadb55

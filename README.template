@@ -1,5 +1,5 @@
-Software Collection {{ collection }} Dockerfile
-{{ '=' * (collection|length + 31) }}
+Software Collection {{ container }} Dockerfile
+{{ '=' * (container|length + 31) }}
 
 Build
 -----
@@ -10,4 +10,4 @@ system with Software Collections entitlements available.
 Run
 ---
 
-docker run -t -i {{ collection }} /bin/bash -l
+docker run -t -i {{ container }} /bin/bash -l
