@@ -19,6 +19,8 @@ for coll, cvars in y["collections"].items():
         # Set up collection variables which can be substituted in templates
         if 'collection' not in cvars:
             cvars["collection"] = coll
+        if 'enable' not in cvars:
+            cvars["enable"] = coll
         for template, output in tvars.items():
             # Allow use of variables in output filenames as well as files
             output = outdir + "/" + Template(output).render(cvars)
