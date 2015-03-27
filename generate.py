@@ -1,11 +1,13 @@
 #!/usr/bin/python
 
-from jinja2 import Template
+from jinja2 import Environment, Template
 import yaml
 import os
 import sys
 
 y = yaml.safe_load(open('rhscl.yaml'))
+
+env = Environment(keep_trailing_newline=True)
 
 for coll, cvars in y["collections"].items():
     for tname, tvars in y["templates"].items():
@@ -20,10 +22,10 @@ for coll, cvars in y["collections"].items():
         for template, output in tvars.items():
             # Allow use of variables in output filenames as well as files
             output = outdir + "/" + Template(output).render(cvars)
-            # Produce output from template through Cheetah:
-            temp = Template(open(template, "r").read()).render(cvars)
-            # Write it.
-            open(output, "w").write(temp)
+            # Construct a template, render output, write, done.
+            temp = env.from_string(open(template, "r").read())
+            outp = temp.render(cvars)
+            open(output, "w").write(outp)
              
             print("wrote %s for %s on %s" % (output, coll, tname))
 	    	
