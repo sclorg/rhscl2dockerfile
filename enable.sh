@@ -1,3 +1,4 @@
 #!/bin/bash
-source /opt/rh/{{collection}}/enable
-export X_SCLS="`scl enable {{enable}} 'echo $X_SCLS'`"
+{% for c in enable %}source /opt/rh/{{c}}/enable
+{% endfor %}
+export X_SCLS="`scl enable {{ " ".join(enable) }} 'echo $X_SCLS'`"
