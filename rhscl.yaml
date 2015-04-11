@@ -5,6 +5,16 @@
 #      <install>     -- the set of packages to install
 #      <expose>      -- the set of ports to expose
 #      <enable>      -- the list of collection names which should be enabled
+#      <add>         -- ADD specification, used in all templates
+#                       accepts parameters: tpl src dest_dir
+#                         tpl: file to be copied into Dockerfile directory
+#                         src: location in the Dockerfile directory (first
+#                           argument of ADD directive)
+#                         dest_dir: location in the image (second argument
+#                           of ADD directive)
+#      <add.rhelX>   -- ADD specification, used only for specified template
+#      <entrypoint>  -- ENTRYPOINT specification, ideally as array of strings
+#      <cmd>         -- CMD specification, ideally as array of strings
 #
 # By default, both "enable" and "collection" are set to the container name.
 # Each of these can be overriden in the template list below.
