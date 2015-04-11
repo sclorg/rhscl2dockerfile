@@ -5,12 +5,13 @@ import yaml
 import os
 import sys
 import shutil
+import argparse
 
 
 class CollectionGenerator:
-    def __init__(self, env, cvars, coll, tname, tvars):
+    def __init__(self, gen, cvars, coll, tname, tvars):
         self.cvars = cvars
-        self.env = env
+        self.gen = gen
         self.collection = coll
         self.tname = tname
         self.tvars = tvars
@@ -31,7 +32,7 @@ class CollectionGenerator:
         else:
             # Construct a template, render dst, write, done.
             with open(src, 'r') as f:
-                temp = self.env.from_string(f.read())
+                temp = self.gen.env.from_string(f.read())
             with open(dst, "w") as f:
                 f.write(temp.render(self.cvars))
  
@@ -61,7 +62,7 @@ class CollectionGenerator:
                 # in the dockerfile directory
                 result.append({'src': os.path.join('.', dst_file),
                                'dst': os.path.join(dst_dir, dst_file)})
-                self.copy_render(src, os.path.join(self.outdir, dst_file))
+                self.copy_render(os.path.join(self.gen.cwd, src), os.path.join(self.outdir, dst_file))
             except ValueError:
                 print('Error: added files spec has incorrect format: {}'.format(f))
         self.cvars['add_files'] = result
@@ -83,19 +84,24 @@ class CollectionGenerator:
         Generates Dockerfile and files for one collection
         """
         self.outdir = outdir
+        print(outdir)
         self.set_defaults()
         self.handle_add_files()
         for src, dst in self.tvars.items():
             # Allow use of variables in dst filenames as well as files
             dst = Template(dst).render(self.cvars)
-            self.copy_render(src, os.path.join(self.outdir, dst))
+            self.copy_render(os.path.join(self.gen.cwd, src),
+                             os.path.join(self.outdir, dst))
             print("wrote %s for %s on %s" % (dst, self.collection, self.tname))
 
 
 class DockerfileGenerator:
-    def __init__(self, config_file):
-        self.y = yaml.safe_load(open(config_file))
+    def __init__(self, config_file, result_dir):
+        self.config_file = config_file
+        self.y = yaml.safe_load(open(self.config_file))
         self.env = Environment(keep_trailing_newline=True)
+        self.cwd = os.path.dirname(self.config_file)
+        self.result_dir = result_dir
 
     def generate_all(self):
         """
@@ -104,16 +110,24 @@ class DockerfileGenerator:
         """
         for coll, cvars in self.y["containers"].items():
             for tname, tvars in self.y["templates"].items():
-                outdir = tname + "." + coll
+                outdir = os.path.join(self.result_dir, tname + "." + coll)
                 try:
                     os.makedirs(outdir)
                 except:
                     pass
-                collection = CollectionGenerator(self.env, cvars, coll, tname, tvars)
+                collection = CollectionGenerator(self, cvars, coll, tname, tvars)
                 collection.generate(outdir)
 
 
 if __name__ == "__main__":
-    generator = DockerfileGenerator('rhscl.yaml')
+
+    parser = argparse.ArgumentParser(description='RHSCL Dockerfile Generator')
+    parser.add_argument('--config_file', type=str, default='rhscl.yaml',
+                        help='YAML with collections specification, rhscl.yaml'+
+                             'used as default')
+    parser.add_argument('--result', type=str, default='.',
+                        help='Result dir where to store dockerfiles, default is "."')
+    args = parser.parse_args()
+    generator = DockerfileGenerator(args.config_file, args.result)
     generator.generate_all()
 
