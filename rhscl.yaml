@@ -13,6 +13,10 @@
 #                         dest_dir: location in the image (second argument
 #                           of ADD directive)
 #      <add.rhelX>   -- ADD specification, used only for specified template
+#      <files>       -- just copy file into Dockerfile directory, used in all
+#                       templates, accepts parameters: tpl src (these have
+#                       the same semantic as for <add>)
+#      <files.rhelX> -- same as <files>, used only for specified template
 #      <entrypoint>  -- ENTRYPOINT specification, ideally as array of strings
 #      <cmd>         -- CMD specification, ideally as array of strings
 #

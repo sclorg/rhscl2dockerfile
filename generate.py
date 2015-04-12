@@ -63,9 +63,33 @@ class CollectionGenerator:
                 result.append({'src': os.path.join('.', dst_file),
                                'dst': os.path.join(dst_dir, dst_file)})
                 self.copy_render(os.path.join(self.gen.cwd, src), os.path.join(self.outdir, dst_file))
+                print("wrote %s for %s on %s" % (dst_file, self.collection, self.tname))
             except ValueError:
                 print('Error: added files spec has incorrect format: {}'.format(f))
         self.cvars['add_files'] = result
+
+
+    def handle_other_files(self):
+        """
+        Handle files that are just added to Dockerfile directory and these
+        files also can include template macros that will be expanded.
+        """
+        add_key = 'files.{}'.format(self.tname)
+        if add_key in self.cvars:
+            add_files = self.cvars[add_key]
+        elif 'files' in self.cvars:
+            add_files = self.cvars['files']
+        else:
+            add_files = []
+
+        # Set correct src and dst values
+        for f in add_files:
+            try:
+                [src, dst_file] = f.split()
+                self.copy_render(os.path.join(self.gen.cwd, src), os.path.join(self.outdir, dst_file))
+                print("wrote %s for %s on %s" % (dst_file, self.collection, self.tname))
+            except ValueError:
+                print('Error: files spec has incorrect format: {}'.format(f))
 
 
     def set_defaults(self):
@@ -93,6 +117,7 @@ class CollectionGenerator:
             self.copy_render(os.path.join(self.gen.cwd, src),
                              os.path.join(self.outdir, dst))
             print("wrote %s for %s on %s" % (dst, self.collection, self.tname))
+        self.handle_other_files()
 
 
 class DockerfileGenerator:
@@ -122,10 +147,11 @@ class DockerfileGenerator:
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='RHSCL Dockerfile Generator')
-    parser.add_argument('--config_file', type=str, default='rhscl.yaml',
+    parser.add_argument('-c', '--config_file', metavar='rhscl.yaml', type=str,
+                        default='rhscl.yaml',
                         help='YAML with collections specification, rhscl.yaml'+
                              'used as default')
-    parser.add_argument('--result', type=str, default='.',
+    parser.add_argument('-r', '--result', metavar='dir', type=str, default='.',
                         help='Result dir where to store dockerfiles, default is "."')
     args = parser.parse_args()
     generator = DockerfileGenerator(args.config_file, args.result)
