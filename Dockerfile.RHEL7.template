@@ -9,9 +9,18 @@ RUN yum install -y --setopt=tsflags=nodocs {{ install }} && yum clean all
 EXPOSE {{ port }}
 {% endfor %}{% endif %}
 ADD ./enable{{ collection }}.sh /etc/profile.d/
-{% if add_files is defined %}{% for f in add_files %}
-ADD {{ f['src'] }} {{ f['dst'] }}{% endfor %}{% endif %}
+{%- if add_files is defined %}{% for f in add_files %}
+ADD {{ f['src'] }} {{ f['dst'] }}
+{%- endfor -%}{% endif %}
+{% if user %}
+USER {{ user|replace("'", "\"") }}
+{% endif -%}
+{% if volume %}
+VOLUME {{ volume|replace("'", "\"") }}
+{% endif -%}
 {% if entrypoint %}
-ENTRYPOINT {{ entrypoint|replace("'", "\"") }}{% endif %}
+ENTRYPOINT {{ entrypoint|replace("'", "\"") }}
+{% endif -%}
 {% if cmd %}
-CMD {{ cmd|replace("'", "\"") }}{% endif %}
+CMD {{ cmd|replace("'", "\"") }}
+{% endif -%}
