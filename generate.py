@@ -16,7 +16,7 @@ class CollectionGenerator:
         self.tname = tname
         self.tvars = tvars
 
-    def copy_render(self, src, dst):
+    def copy_render(self, src, dst, allways_render=True):
         """
         Copy file or dir recursively from src to dst while file content
         is rendered as template using general values and values specific
@@ -30,11 +30,14 @@ class CollectionGenerator:
                 self.copy_render(os.path.join(src, f), 
                                  os.path.join(dst, f))
         else:
-            # Construct a template, render dst, write, done.
-            with open(src, 'r') as f:
-                temp = self.gen.env.from_string(f.read())
-            with open(dst, "w") as f:
-                f.write(temp.render(self.cvars))
+            if allways_render or src.endswith('.tpl'):
+                # Construct a template, render dst, write, done.
+                with open(src, 'r') as f:
+                    temp = self.gen.env.from_string(f.read())
+                with open(dst, "w") as f:
+                    f.write(temp.render(self.cvars))
+            else:
+                shutil.copyfile(src, dst)
  
 
     def handle_add_files(self):
@@ -57,12 +60,14 @@ class CollectionGenerator:
         result = []
         for f in add_files:
             try:
-                [src, dst_file, dst_dir] = f.split()
+                [src, dst_file, dst_dir] = f
                 # we use dst_file here since that is how the file is called
                 # in the dockerfile directory
                 result.append({'src': os.path.join('.', dst_file),
                                'dst': os.path.join(dst_dir, dst_file)})
-                self.copy_render(os.path.join(self.gen.cwd, src), os.path.join(self.outdir, dst_file))
+                self.copy_render(os.path.join(self.gen.cwd, src),
+                                 os.path.join(self.outdir, dst_file),
+                                 allways_render=False)
                 print("wrote %s for %s on %s" % (dst_file, self.collection, self.tname))
             except ValueError:
                 print('Error: added files spec has incorrect format: {}'.format(f))
@@ -85,8 +90,10 @@ class CollectionGenerator:
         # Set correct src and dst values
         for f in add_files:
             try:
-                [src, dst_file] = f.split()
-                self.copy_render(os.path.join(self.gen.cwd, src), os.path.join(self.outdir, dst_file))
+                [src, dst_file] = f
+                self.copy_render(os.path.join(self.gen.cwd, src),
+                                 os.path.join(self.outdir, dst_file),
+                                 allways_render=False)
                 print("wrote %s for %s on %s" % (dst_file, self.collection, self.tname))
             except ValueError:
                 print('Error: files spec has incorrect format: {}'.format(f))

@@ -5,18 +5,29 @@
 #      <install>     -- the set of packages to install
 #      <expose>      -- the set of ports to expose
 #      <enable>      -- the list of collection names which should be enabled
-#      <add>         -- ADD specification, used in all templates
-#                       accepts parameters: tpl src dest_dir
-#                         tpl: file to be copied into Dockerfile directory
-#                         src: location in the Dockerfile directory (first
-#                           argument of ADD directive)
-#                         dest_dir: location in the image (second argument
-#                           of ADD directive)
-#      <add.rhelX>   -- ADD specification, used only for specified template
-#      <files>       -- just copy file into Dockerfile directory, used in all
-#                       templates, accepts parameters: tpl src (these have
-#                       the same semantic as for <add>)
-#      <files.rhelX> -- same as <files>, used only for specified template
+#      <add>         -- ADD specification, valid for all templates
+#                       accepts list of parameters:
+#                       @tpl is a file to be copied into Dockerfile directory
+#                       if this file ends with .tpl, then it is rendered
+#                       as jinja template
+#                       @src is a location in the Dockerfile directory (first
+#                       argument of ADD directive in the Dockerfile)
+#                       @dest_dir is a location in the image (second argument
+#                       of ADD directive in the Dockerfile)
+#                       e.g.:
+#                       add:
+#                         - [mycol/entrypoint.sh, entrypoint.sh, /usr/local/bin]
+#                         - [mycol/HOWTO.tpl, HOWTO, /usr/local/share/doc]
+#      <add.rhelX>   -- ADD specification, used only for the template rhelX
+#      <files>       -- just copy file into Dockerfile directory, valid for all
+#                       templates, accepts list of parameters:
+#                       @tpl has the same semantic as for <add>
+#                       @src has the same semantic as for <add>
+#                       e.g.:
+#                       files:
+#                         - [mycol/README.md.tpl, README.md]
+#                         - [mycol/LICENSE, LICENSE]
+#      <files.rhelX> -- same as <files>, used only for the template rhelX
 #      <entrypoint>  -- ENTRYPOINT specification, ideally as array of strings
 #      <cmd>         -- CMD specification, ideally as array of strings
 #
