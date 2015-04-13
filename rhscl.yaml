@@ -5,6 +5,11 @@
 #      <install>     -- the set of packages to install
 #      <expose>      -- the set of ports to expose
 #      <enable>      -- the list of collection names which should be enabled
+#      <envs>        -- argument is blindly passed to ENV directive
+#                       e.g.:
+#                       envs:
+#                         - IMAGE_DESCRIPTION       MySQL 5.5
+#                         - IMAGE_TAGS              mysql,mysql55
 #      <add>         -- ADD specification, valid for all templates
 #                       accepts list of parameters:
 #                       @tpl is a file to be copied into Dockerfile directory
