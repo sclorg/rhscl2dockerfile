@@ -18,6 +18,11 @@ ADD ./enable{{ collection }}.sh /etc/profile.d/
 {%- if add_files is defined %}{% for f in add_files %}
 ADD {{ f['src'] }} {{ f['dst'] }}
 {%- endfor -%}{% endif %}
+{%- if run is defined %}
+
+RUN	{% for c in run -%}
+{{ c }} && \
+	{% endfor -%}:{% endif %}
 {% if user %}
 USER {{ user|replace("'", "\"") }}
 {% endif -%}

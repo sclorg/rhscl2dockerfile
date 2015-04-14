@@ -33,6 +33,13 @@
 #                         - [mycol/README.md.tpl, README.md]
 #                         - [mycol/LICENSE, LICENSE]
 #      <files.rhelX> -- same as <files>, used only for the template rhelX
+#      <run>         -- RUN specification which accepts list of commands. It
+#                       generates one RUN call in the Dockerfile that runs
+#                       many commands connected with &&
+#                       e.g.:
+#                       run:
+#                         - mkdir -p /some/dir
+#                         - chown user:user /some/dir
 #      <entrypoint>  -- ENTRYPOINT specification, ideally as array of strings
 #      <cmd>         -- CMD specification, ideally as array of strings
 #
