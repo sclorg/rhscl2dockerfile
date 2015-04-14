@@ -38,6 +38,7 @@ class CollectionGenerator:
                     f.write(temp.render(self.cvars))
             else:
                 shutil.copyfile(src, dst)
+            shutil.copymode(src, dst)
  
 
     def handle_add_files(self):
