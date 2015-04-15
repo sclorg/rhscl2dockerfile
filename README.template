@@ -10,4 +10,4 @@ system with Software Collections entitlements available.
 Run
 ---
 
-docker run -t -i {{ container }} /bin/bash -l
+docker run -t -i {% if privileged %} --privileged {% endif -%} {{ container }} /bin/bash -l
