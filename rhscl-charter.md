@@ -39,18 +39,69 @@ TODO: this is to be decided; OpenShift uses IMAGE_TAGS, IMAGE_EXPOSE_SERVICES an
 
 ### Enabling the collection:
 
-When running the dockerfile with just 'bash' as command, Bash is run with all necessary collections enabled (usually one, but for some images more).
+This part is more complicated than it seems from the first look. The bellow is example how this issue may be addressed for `mysql55` docker image.
+
+When running the docker image with just 'bash' as command, Bash must be run with all necessary collections enabled (usually one, but for some images more).
 ```
-docker run <imagename> bash
+docker run mysql55 bash
 docker> echo $X_SCLS
+mysql55
 ```
 
-How to ensure this:
-* Collection is enabled in entrypoint and it is also the only thing done in the entrypoint.
-* To run the docker container without collection enabled, it can be done by changing --entrypoint to sh -c.
+The above must be ensured also in cases we run `docker exec` for running container:
+```
+docker run --name myapp mysql55
+docker exec -d myapp bash
+bash> echo $X_SCLS
+mysql55
+```
+(mind that entrypoint is not run in this case, so the collection has to be enabled somewhere else than in entrypoint)
 
-If we run the `docker exec <imagename> bash` the collection also has to be enabled. (mind that entrypoint is not run in this case, so the collection has to be enabled somewhere else than in entrypoint).
-* TODO: this needs to be addressed
+We also need to execute all the commands in the `ENTRYPOINT`/`CMD` already in proper environment, i.e. with collection(s) enabled.
+
+The following Dockerfile snippet should make it work:
+```
+# Make sure proper ENV is set for every non-interactive invocation
+ENV HOME /var/lib/mysql
+ENV BASH_ENV /etc/profile.d/cont-env.sh
+ADD ./cont-env.sh $HOME/.bashrc
+ADD ./cont-env.sh /etc/profile.d/cont-env.sh
+ADD ./functions.sh /usr/share/cont-layer/common/
+ADD ./enablemariadb55.sh /usr/share/cont-layer/common/env.d/
+```
+
+...where content of cont-env.sh is:
+```
+source /usr/share/cont-layer/common/functions.sh
+cont_source_scripts common env
+unset -f cont_source_scripts
+```
+
+Content of functions.sh is:
+```
+# Sources *.sh in the following directories in this order:
+# /usr/share/cont-layer/$1/$2.d
+# /usr/share/cont-volume/$1/$2.d
+cont_source_scripts() {
+    [ -z "$2" ] && return
+    for dir in cont-layer cont-volume ; do
+        full_dir="/usr/share/$dir/${1}/${2}.d"
+        for i in ${full_dir}/*.sh; do
+            if [ -r "$i" ]; then
+                . "$i"
+            fi
+        done
+    done
+}
+```
+
+Content of enablemariadb55.sh is:
+```
+#!/bin/bash
+source scl_source enable mariadb55
+```
+
+The set of collections enabled should be extended in some upper layer, so we will have directory `/usr/share/cont-layer/common/env.d` that will include bash scripts to source.
 
 
 Common requirements for all language stacks
@@ -103,9 +154,10 @@ ENV HOME /home/default
 # Setup the 'default' user that is used for the build execution and for the
 # application runtime execution.
 # TODO: Use better UID and GID values
+# discuss this at https://lists.fedoraproject.org/pipermail/env-and-stacks/2015-April/000771.html
 RUN mkdir -p ${HOME} && \
-    groupadd -r default -f -g 333 && \
-    useradd -u 333 -r -g default -d ${HOME} -s /sbin/nologin \
+    groupadd -r default -f -g 1000 && \
+    useradd -u 1000 -r -g default -d ${HOME} -s /sbin/nologin \
             -c "Default Application User" default
 ```
 
@@ -125,18 +177,18 @@ If there is a port that is usually used for development or production, this port
 
 ### ruby dockerfile:
 * collections: ror40 ruby200
-* extra packages: ruby200-ruby-devel ruby200-rubygem-rake v8314 ror40-rubygem-bundler ror40-rubygem-rack
-* EXPOSE (TODO: 8080 or 5000?)
+* extra packages: ruby200-ruby-devel ruby200-rubygem-rake v8314 ror40-rubygem-bundler
+* `EXPOSE` 8080
 
 
 ### rails dockerfile:
 * collections: ror40 ruby200
-* extra packages: TODO (basically rails gems)
-* EXPOSE (TODO: 8080 or 5000?)
+* extra packages: all rails gems
+* `EXPOSE` 8080
 
 
 ### nodejs dockerfile:
-* EXPOSE 8080
+* TODO: `EXPOSE` 80 or 8080?
 
 
 ### perl dockerfile:
@@ -157,16 +209,21 @@ Data directory (if any) that is expected to be mounted shouldn't be home directo
 In order to allow just extending the docker image easily without rewriting scripts from scratch, the scripts should include hook scripts in places it makes sense from directory that may be mounted or extended in another layer, something similar to the following (for databases the hooks may be "preinit", "postinit"):
 
 ```
+# this function sources *.sh in the following directories in this order:
+# /usr/share/cont-layer/$1/$2.d
+# /usr/share/cont-volume/$1/$2.d
 source_scripts() {
-    [ -z "$1" ] && return
-    for i in $1/*.sh; do
-        if [ -r "$i" ]; then
-            . "$i"
-        fi
+    [ -z "$2" ] && return
+    for dir in cont-layer cont-volume ; do
+        full_dir="/usr/share/$dir/${1}/${2}.d"
+        for i in ${full_dir}/*.sh; do
+            if [ -r "$i" ]; then
+                . "$i"
+            fi
+        done
     done
 }
-source_scripts /usr/share/cont-layer/mysql/post-initdb.d
-source_scripts /usr/share/cont-volume/mysql/post-initdb.d
+source_scripts mysql post-initdb
 ```
 
 So the image that extends such an image will just place some Bash scripts into `/usr/share/cont-layer/mysql/post-initdb.d` directory and won't need to change anything else.
@@ -274,5 +331,30 @@ Defining those variables will cause:
   * either root_password or user+password+database must be set if running with empty datadir, both combination is also valid
   * `MONGODB_DISABLE_CREATE_DB` -- when set, it disables initializing DB and no other variables from the set above is required
 
+
+### httpd dockerfile:
+
+* Exposed port: 80, 443
+* Config dir: `/etc/httpd`
+* Daemon runs as `apache` (USER directive)
+* Log file: `/var/log/httpd/`
+
+
+### httpd-php dockerfile:
+
+* Includes all from httpd dockerfile
+* Packages installed: `<php_collection>`, `<php_collection>-php`
+
+
+### httpd-python dockerfile:
+
+* Includes all from httpd dockerfile
+* Packages installed: `<python_collection>`, `<python_collection>-mod_wsgi`
+
+
+### httpd-perl dockerfile:
+
+* Includes all from httpd dockerfile
+* Packages installed: `<perl_collection>`, `<perl_collection>-mod_perl`
 
 
