@@ -34,7 +34,7 @@ RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 ### Labels and temporary environment variables:
 
-TODO: this is to be decided; OpenShift uses IMAGE_TAGS, IMAGE_EXPOSE_SERVICES and other ENV variables, which should serve for the same purpose as LABELs in the future docker versions, but we need to document what is the expected content, why there are defined and how the transition to LABEL will look like
+TODO: this is to be decided; OpenShift uses IMAGE_TAGS, IMAGE_EXPOSE_SERVICES and other ENV variables, which should serve for the same purpose as LABELs in the future docker versions, but we need to document what is the expected content, why there are defined and how the transition to LABEL will look like. Until this has some final resolution, we shouldn't use those environment variables, since we'd provide some API that will possibly change.
 
 
 ### Enabling the collection:
@@ -191,18 +191,20 @@ The environemtn variables will have common prefix for every configuration file, 
 * `MONGOS_CONFIG` for mongos.conf
 
 Then user may define the following variables during container start:
+
 ```
 POSTGRESQL_CONF_SHARED_BUFFERS=true
 MYSQL_CONF_FT_MIN_WORD_LEN=4
 MONGODB_CONF_SMALL_FILES=1
 MONGODB_CONF_SHARD_SMALL_FILES=1
 ```
+
 Defining those variables will cause:
 
-* adding shared_buffers=true into postgresql.conf
-* adding ft_min_word_len=4 into my.cnf
-* adding smallfiles=true into mongod.conf
-* adding smallfiles=true into mongos.conf
+* adding `shared_buffers=true` into `postgresql.conf`
+* adding `ft_min_word_len=4` into `my.cnf`
+* adding `smallfiles=true` into `mongod.conf`
+* adding `smallfiles=true` into `mongos.conf`
 
 
 ### mariadb/mysql dockerfiles:
