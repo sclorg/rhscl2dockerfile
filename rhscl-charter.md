@@ -265,6 +265,11 @@ Defining those variables will cause:
 
 This may be not the safest way to define the configuration, but it seems to be still better for maintaining than hardcoding the variables in some predefined template and changing the template for every version that changes default values or when another variable is necessary.
 
+As for implementation the following is the minimal snippet that does the trick:
+```
+set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/generated.cnf
+```
+
 
 ### mariadb/mysql dockerfiles:
 
