@@ -185,10 +185,10 @@ For kubernetes environment, where mounting configuration is not easy right now, 
 
 The environemtn variables will have common prefix for every configuration file, for example:
 
-* `POSTGRESQL_CONFIG` for postgresql.conf
-* `MYSQL_CONFIG` for my.cnf
-* `MONGOD_CONFIG` for mongod.conf
-* `MONGOS_CONFIG` for mongos.conf
+* `POSTGRESQL_CONFIG` for `postgresql.conf`
+* `MYSQL_CONFIG` for `my.cnf`
+* `MONGOD_CONFIG` for `mongod.conf`
+* `MONGOS_CONFIG` for `mongos.conf`
 
 Then user may define the following variables during container start:
 
@@ -214,8 +214,9 @@ Defining those variables will cause:
 * Available commands within container:
   * `run-mysqld` (default CMD)
 * Exposed port: 3306
-* Directory for data (VOLUME): /var/lib/mysql/data
-* Config file: /etc/my.cnf, /etc/my.cnf.d
+* Directory for data (VOLUME): `/var/lib/mysql/data`
+* Config file: `/etc/my.cnf`, `/etc/my.cnf.d`
+  * will be writable by `mysql` user, so they may be rewritten by process running under `mysql` user
 * Deamon runs as `mysql` user (`USER` directive)
 * Log file directory: `/var/log/<package>`, e.g. `/var/log/mariadb`
 * Socket file: not necessary, if proofed otherwise, `/var/lib/mysql/mysql.sock` will be used
@@ -234,14 +235,14 @@ Defining those variables will cause:
 * Available commands within container:
   * `run-postgresql` (default CMD)
 * Exposed port: 5432
-* Directory for data (VOLUME): /var/lib/pgsql/data ($PGDATA)
+* Directory for data (VOLUME): `/var/lib/pgsql/data` ($PGDATA)
 * Config file:
-  * $PGDATA/postgresql.conf
-  * $PGDATA/pg_hba.conf
+  * `$PGDATA/postgresql.conf`
+  * `$PGDATA/pg_hba.conf`
 * Daemon runs as `postgres` (`USER` directive)
-* Startup log at /var/lib/pgsql/pgstartup.log
-* Log directory: $PGDATA/pg_log
-* pg_hba.conf allows to log in from addresses 0.0.0.0 and ::/0 using md5
+* Startup log at `/var/lib/pgsql/pgstartup.log`
+* Log directory: `$PGDATA/pg_log`
+* `pg_hba.conf` allows to log in from addresses `0.0.0.0` and `::/0` using `md5`
 * Environment variables:
   * `POSTGRESQL_USER`
   * `POSTGRESQL_PASSWORD`
@@ -253,15 +254,18 @@ Defining those variables will cause:
 
 ### mongodb dockerfile:
 
-* Binaries that must be available in the shell: mongo, mongod, mongos (installed packages: <collection>, <collection>-mongodb)
+* Binaries that must be available in the shell: mongo, mongod, mongos (installed packages: `<collection>`, `<collection>-mongodb`)
 * Available commands within container:
   * `run-mongod` (default CMD)
   * `run-mongos`
 * Exposed port: 27017,28017 (http://docs.mongodb.org/v2.6/reference/default-mongodb-port/)
-* Directory for data (VOLUME): /var/lib/mongodb/data
-* Config files: /etc/mongod.conf, /etc/mongoc.conf
+* Directory for data (VOLUME): `/var/lib/mongodb/data`
+* Config files:
+  * `/etc/mongod.conf`
+  * `/etc/mongoc.conf`
+  * those will be writable by `mongodb` user, so they may be rewritten by process running under `mongodb` user
 * Daemon runs as `mongodb` (USER directive)
-* Log file directory: /var/log/mongodb/
+* Log file directory: `/var/log/mongodb/`
 * Environment variables:
   * `MONGODB_USER`
   * `MONGODB_PASSWORD`
