@@ -1,10 +1,10 @@
 RHSCL docker images charter
 ===========================
-Reasoning: This document should serve as agreement what users may expect from docker images based on RHSCL packages.
+This document should serve as agreement what users may expect from docker images based on RHSCL packages.
 
 
-Common requirements for all RHSCL docker images:
-------------------------------------------------
+Common requirements for all RHSCL docker images
+-----------------------------------------------
 The following information is valid for all RHSCL dockerfiles.
 
 ### Base images
@@ -39,21 +39,24 @@ TODO: this is to be decided; OpenShift uses IMAGE_TAGS, IMAGE_EXPOSE_SERVICES an
 
 ### Enabling the collection:
 
-What happends when running the dockerfile with 'bash' as command:
+When running the dockerfile with just 'bash' as command, Bash is run with all necessary collections enabled (usually one, but for some images more).
 ```
 docker run <imagename> bash
+docker> echo $X_SCLS
 ```
-Bash is run with all necessary collections enabled (usually one, but for some images more).
 
-Collection is enabled in entrypoint and it is also the only thing done in the entrypoint.
-
-To run the docker container without collection enabled, it can be done by changing --entrypoint to sh -c.
+How to ensure this:
+* Collection is enabled in entrypoint and it is also the only thing done in the entrypoint.
+* To run the docker container without collection enabled, it can be done by changing --entrypoint to sh -c.
 
 If we run the `docker exec <imagename> bash` the collection also has to be enabled. (mind that entrypoint is not run in this case, so the collection has to be enabled somewhere else than in entrypoint).
+* TODO: this needs to be addressed
 
 
-Common requirements for all language stacks docker images:
-----------------------------------------------------------
+Common requirements for all language stacks
+-------------------------------------------
+
+The following are requirements for language stacks containers (php, python, ruby, nodejs, perl).
 
 ### Devel packages installed:
 
@@ -108,40 +111,44 @@ RUN mkdir -p ${HOME} && \
 
 ### Exposing ports
 
-If there is a port that is usually used for development or production, this port should be exposed in the Dockerfile.
-EXPOSE <develport>
-
+If there is a port that is usually used for development or production, this port should be exposed in the Dockerfile. Common port that users usually use should be used in Dockerfile.
 
 ### php dockerfile:
-EXPOSE 8080
-extra packages: TODO
+* extra packages: TODO
+* EXPOSE 8080
 
 
 ### python dockerfile:
-extra packages: python33-python-devel python33-python-setuptools
-EXPOSE 8080
+* extra packages: python33-python-devel python33-python-setuptools
+* EXPOSE 8080
 
 
 ### ruby dockerfile:
-collections: ror40 ruby200
-extra packages: ruby200-ruby-devel ruby200-rubygem-rake v8314 ror40-rubygem-bundler ror40-rubygem-rack
-EXPOSE 8080 (TODO: not 5000?)
+* collections: ror40 ruby200
+* extra packages: ruby200-ruby-devel ruby200-rubygem-rake v8314 ror40-rubygem-bundler ror40-rubygem-rack
+* EXPOSE (TODO: 8080 or 5000?)
+
+
+### rails dockerfile:
+* collections: ror40 ruby200
+* extra packages: TODO (basically rails gems)
+* EXPOSE (TODO: 8080 or 5000?)
 
 
 ### nodejs dockerfile:
-EXPOSE 8080
+* EXPOSE 8080
 
 
 ### perl dockerfile:
-EXPOSE 8080
-extra packages: perl516-mod_perl perl516-perl-CPANPLUS
+* EXPOSE 8080
+* extra packages: perl516-mod_perl perl516-perl-CPANPLUS
 
 
-Common requirements for daemons:
---------------------------------
-After running the container without any command, the daemon is run using exec (no other process is forking to run the daemon) -- this is necessary to pass signals properly
+Common requirements for daemons
+-------------------------------
+After running the container without any command, the daemon is run using exec (no other process is forking to run the daemon) -- this is necessary to pass signals properly.
 
-Daemon is listening on 0.0.0.0.
+Daemon is listening on 0.0.0.0 by default.
 
 Data directory (if any) that is expected to be mounted shouldn't be home directory of user, there may be more stuff that we don't want to mount, so in some cases we use data/ subdirectory for data themselves (and VOLUME)
 
@@ -178,24 +185,24 @@ For kubernetes environment, where mounting configuration is not easy right now, 
 
 The environemtn variables will have common prefix for every configuration file, for example:
 
-POSTGRESQL_CONFIG for postgresql.conf
-MYSQL_CONFIG for my.cnf
-MONGOD_CONFIG for mongod.conf
-MONGOS_CONFIG for mongos.conf
+* `POSTGRESQL_CONFIG` for postgresql.conf
+* `MYSQL_CONFIG` for my.cnf
+* `MONGOD_CONFIG` for mongod.conf
+* `MONGOS_CONFIG` for mongos.conf
 
 Then user may define the following variables during container start:
-
+```
 POSTGRESQL_CONF_SHARED_BUFFERS=true
 MYSQL_CONF_FT_MIN_WORD_LEN=4
 MONGODB_CONF_SMALL_FILES=1
 MONGODB_CONF_SHARD_SMALL_FILES=1
-
+```
 Defining those variables will cause:
 
-adding shared_buffers=true into postgresql.conf
-adding ft_min_word_len=4 into my.cnf
-adding smallfiles=true into mongod.conf
-adding smallfiles=true into mongos.conf
+* adding shared_buffers=true into postgresql.conf
+* adding ft_min_word_len=4 into my.cnf
+* adding smallfiles=true into mongod.conf
+* adding smallfiles=true into mongos.conf
 
 
 ### mariadb/mysql dockerfiles:
@@ -211,12 +218,12 @@ adding smallfiles=true into mongos.conf
 * Log file directory: `/var/log/<package>`, e.g. `/var/log/mariadb`
 * Socket file: not necessary, if proofed otherwise, `/var/lib/mysql/mysql.sock` will be used
 * Environment variables:
-  * MYSQL_USER - Database user name
-  * MYSQL_PASSWORD - User's password
-  * MYSQL_DATABASE - Name of the database to create
-  * MYSQL_ROOT_PASSWORD - Password for the 'root' MySQL account
+  * `MYSQL_USER` - Database user name
+  * `MYSQL_PASSWORD` - User's password
+  * `MYSQL_DATABASE` - Name of the database to create
+  * `MYSQL_ROOT_PASSWORD` - Password for the 'root' MySQL account
   * either root_password or user+password+database must be set if running with empty datadir, both combination is also valid
-  * MYSQL_DISABLE_CREATE_DB -- when set, it disables initializing DB and no other variables from the set above is required
+  * `MYSQL_DISABLE_CREATE_DB` -- when set, it disables initializing DB and no other variables from the set above is required
 
 
 ### postgresql dockerfile:
@@ -234,12 +241,12 @@ adding smallfiles=true into mongos.conf
 * Log directory: $PGDATA/pg_log
 * pg_hba.conf allows to log in from addresses 0.0.0.0 and ::/0 using md5
 * Environment variables:
-  * POSTGRESQL_USER
-  * POSTGRESQL_PASSWORD
-  * POSTGRESQL_DATABASE
-  * POSTGRESQL_ADMIN_PASSWORD
+  * `POSTGRESQL_USER`
+  * `POSTGRESQL_PASSWORD`
+  * `POSTGRESQL_DATABASE`
+  * `POSTGRESQL_ADMIN_PASSWORD`
   * either root_password or user+password+database must be set if running with empty datadir, both combination is also valid
-  * POSTGRESQL_DISABLE_CREATE_DB -- when set, it disables initializing DB and no other variables from the set above is required
+  * `POSTGRESQL_DISABLE_CREATE_DB` -- when set, it disables initializing DB and no other variables from the set above is required
 
 
 ### mongodb dockerfile:
@@ -254,12 +261,12 @@ adding smallfiles=true into mongos.conf
 * Daemon runs as `mongodb` (USER directive)
 * Log file directory: /var/log/mongodb/
 * Environment variables:
-  * MONGODB_USER
-  * MONGODB_PASSWORD
-  * MONGODB_DATABASE
-  * MONGODB_ADMIN_PASSWORD
+  * `MONGODB_USER`
+  * `MONGODB_PASSWORD`
+  * `MONGODB_DATABASE`
+  * `MONGODB_ADMIN_PASSWORD`
   * either root_password or user+password+database must be set if running with empty datadir, both combination is also valid
-  * MONGODB_DISABLE_CREATE_DB -- when set, it disables initializing DB and no other variables from the set above is required
+  * `MONGODB_DISABLE_CREATE_DB` -- when set, it disables initializing DB and no other variables from the set above is required
 
 
 
