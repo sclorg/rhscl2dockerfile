@@ -1,6 +1,9 @@
 RHSCL docker images charter
 ===========================
+
 This document should serve as agreement what users may expect from docker images based on RHSCL packages.
+
+**This is currently a proposal to be discussed primarily between RHSCL maintainers and OpenShift, one of the main customers of RHSCL docker images.**
 
 
 Common requirements for all RHSCL docker images
@@ -34,7 +37,9 @@ RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 ### Labels and temporary environment variables:
 
-TODO: this is to be decided; OpenShift uses IMAGE_TAGS, IMAGE_EXPOSE_SERVICES and other ENV variables, which should serve for the same purpose as LABELs in the future docker versions, but we need to document what is the expected content, why there are defined and how the transition to LABEL will look like. Until this has some final resolution, we shouldn't use those environment variables, since we'd provide some API that will possibly change.
+OpenShift uses `IMAGE_TAGS`, `IMAGE_EXPOSE_SERVICES` and other `ENV` variables, which should serve for the same purpose as `LABEL`s in the future docker versions. According to the latest info the transition to the `LABEL` should happen as soon as `docker` 1.6 is available, which should be pretty soon and it shouldn't be necessary to include temporary solution with `ENV` variables to RHSCL docker images.
+
+For `LABEL` we still need to define what the keys/values should be and what it means.
 
 
 ### Enabling the collection:
@@ -167,22 +172,22 @@ If there is a port that is usually used for development or production, this port
 
 ### php dockerfile:
 * extra packages: TODO
-* EXPOSE 8080
+* `EXPOSE` 8080
 
 
 ### python dockerfile:
-* extra packages: python33-python-devel python33-python-setuptools
-* EXPOSE 8080
+* extra packages: `python-devel` `python-setuptools`
+* `EXPOSE` 8080
 
 
 ### ruby dockerfile:
-* collections: ror40 ruby200
-* extra packages: ruby200-ruby-devel ruby200-rubygem-rake v8314 ror40-rubygem-bundler
+* collections: `ror40` `ruby200` `v8314`
+* extra packages: `ruby-devel` `rubygem-rake`  `rubygem-bundler`
 * `EXPOSE` 8080
 
 
 ### rails dockerfile:
-* collections: ror40 ruby200
+* collections: `ror40` `ruby200`
 * extra packages: all rails gems
 * `EXPOSE` 8080
 
@@ -192,8 +197,8 @@ If there is a port that is usually used for development or production, this port
 
 
 ### perl dockerfile:
-* EXPOSE 8080
-* extra packages: perl516-mod_perl perl516-perl-CPANPLUS
+* `EXPOSE` 8080
+* extra packages: `perl516-mod_perl` `perl516-perl-CPANPLUS`
 
 
 Common requirements for daemons
@@ -277,7 +282,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 * Binaries that must be available in the shell: `mysqld`, `mysql`, `mysqladmin`
 * Available commands within container:
   * `run-mysqld` (default CMD)
-* Exposed port: 3306
+* `EXPOSE` 3306
 * Directory for data (VOLUME): `/var/lib/mysql/data`
 * Config file: `/etc/my.cnf`, `/etc/my.cnf.d`
   * will be writable by `mysql` user, so they may be rewritten by process running under `mysql` user
@@ -298,7 +303,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 * Binaries that must be available in the shell: `psql`, `postmaster`, `pg_ctl`
 * Available commands within container:
   * `run-postgresql` (default CMD)
-* Exposed port: 5432
+* `EXPOSE` 5432
 * Directory for data (VOLUME): `/var/lib/pgsql/data` ($PGDATA)
 * Config file:
   * `$PGDATA/postgresql.conf`
@@ -320,7 +325,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 * Binaries that must be available in the shell: mongo, mongod, mongos (installed packages: `<collection>`, `<collection>-mongodb`)
 * Available commands within container:
   * `run-mongod` (default CMD)
-* Exposed port: 27017,28017 (http://docs.mongodb.org/v2.6/reference/default-mongodb-port/)
+* `EXPOSE` 27017,28017 (http://docs.mongodb.org/v2.6/reference/default-mongodb-port/)
 * Directory for data (VOLUME): `/var/lib/mongodb/data`
 * Config files:
   * `/etc/mongod.conf`
@@ -338,7 +343,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 
 ### httpd dockerfile:
 
-* Exposed port: 80, 443
+* `EXPOSE` 80, 443
 * Config dir: `/etc/httpd`
 * Daemon runs as `apache` (USER directive)
 * Log file: `/var/log/httpd/`
