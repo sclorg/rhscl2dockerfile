@@ -39,7 +39,7 @@ TODO: this is to be decided; OpenShift uses IMAGE_TAGS, IMAGE_EXPOSE_SERVICES an
 
 ### Enabling the collection:
 
-This part is more complicated than it seems from the first look. The bellow is example how this issue may be addressed for `mysql55` docker image.
+This part is more complicated than it seems from the first look. The bellow is example how this issue may be addressed without defining `ENTRYPOINT` for example of `mysql55` docker image.
 
 When running the docker image with just 'bash' as command, Bash must be run with all necessary collections enabled (usually one, but for some images more).
 ```
@@ -238,22 +238,22 @@ For ad-hoc changing the values it is then possible to change the config file by 
 docker run -v /mine/my.cnf:/etc/my.cnf mysql
 ```
 
-For kubernetes environment, where mounting configuration is not easy right now, docker containers will accept environment variables, that will (if defined) cause adding appropriate option to the appropriate config file during start. These environment variables won't be documented and will be used only in cases the configuration is not possible to be changed by mounting a volume as mentioned above (e.g. OpenShift needs to pass environment variables only).
+For kubernetes environment, where mounting configuration is not easy currently, docker containers may accept environment variables, that will (if defined) cause adding appropriate option to the appropriate config file during start. Changing configuration this way won't be documented and will be used only in cases the configuration is not possible to be changed by passing own configuration file as mentioned above (OpenShift needs to pass environment variables only).
 
-The environemtn variables will have common prefix for every configuration file, for example:
+The environment variables for adjusting configuration will have common prefix for every configuration file, for example:
 
-* `POSTGRESQL_CONFIG` for `postgresql.conf`
-* `MYSQL_CONFIG` for `my.cnf`
-* `MONGOD_CONFIG` for `mongod.conf`
-* `MONGOS_CONFIG` for `mongos.conf`
+* `POSTGRESQL_CONFIG_` for `postgresql.conf`
+* `MYSQL_CONFIG_` for `my.cnf`
+* `MONGOD_CONFIG_` for `mongod.conf`
+* `MONGOS_CONFIG_` for `mongos.conf`
 
 Then user may define the following variables during container start:
 
 ```
-POSTGRESQL_CONF_SHARED_BUFFERS=true
-MYSQL_CONF_FT_MIN_WORD_LEN=4
-MONGODB_CONF_SMALL_FILES=1
-MONGODB_CONF_SHARD_SMALL_FILES=1
+POSTGRESQL_CONFIG_shared_buffers=true
+MYSQL_CONFIG_ft_min_word_len=4
+MONGOD_CONFIG_smallfiles=1
+MONGOS_CONFIG_smallfiles=false
 ```
 
 Defining those variables will cause:
@@ -261,7 +261,9 @@ Defining those variables will cause:
 * adding `shared_buffers=true` into `postgresql.conf`
 * adding `ft_min_word_len=4` into `my.cnf`
 * adding `smallfiles=true` into `mongod.conf`
-* adding `smallfiles=true` into `mongos.conf`
+* adding `smallfiles=false` into `mongos.conf`
+
+This may be not the safest way to define the configuration, but it seems to be still better for maintaining than hardcoding the variables in some predefined template and changing the template for every version that changes default values or when another variable is necessary.
 
 
 ### mariadb/mysql dockerfiles:
@@ -282,7 +284,7 @@ Defining those variables will cause:
   * `MYSQL_PASSWORD` - User's password
   * `MYSQL_DATABASE` - Name of the database to create
   * `MYSQL_ROOT_PASSWORD` - Password for the 'root' MySQL account
-  * either root_password or user+password+database must be set if running with empty datadir, both combination is also valid
+  * either root_password or user+password+database may be set if running with empty datadir, combination of both is also valid
   * `MYSQL_DISABLE_CREATE_DB` -- when set, it disables initializing DB and no other variables from the set above is required
 
 
@@ -305,8 +307,7 @@ Defining those variables will cause:
   * `POSTGRESQL_PASSWORD`
   * `POSTGRESQL_DATABASE`
   * `POSTGRESQL_ADMIN_PASSWORD`
-  * either root_password or user+password+database must be set if running with empty datadir, both combination is also valid
-  * `POSTGRESQL_DISABLE_CREATE_DB` -- when set, it disables initializing DB and no other variables from the set above is required
+  * either root_password or user+password+database may be set if running with empty datadir, combination of both is also valid
 
 
 ### mongodb dockerfile:
@@ -314,12 +315,11 @@ Defining those variables will cause:
 * Binaries that must be available in the shell: mongo, mongod, mongos (installed packages: `<collection>`, `<collection>-mongodb`)
 * Available commands within container:
   * `run-mongod` (default CMD)
-  * `run-mongos`
 * Exposed port: 27017,28017 (http://docs.mongodb.org/v2.6/reference/default-mongodb-port/)
 * Directory for data (VOLUME): `/var/lib/mongodb/data`
 * Config files:
   * `/etc/mongod.conf`
-  * `/etc/mongoc.conf`
+  * `/etc/mongos.conf`
   * those will be writable by `mongodb` user, so they may be rewritten by process running under `mongodb` user
 * Daemon runs as `mongodb` (USER directive)
 * Log file directory: `/var/log/mongodb/`
@@ -328,8 +328,7 @@ Defining those variables will cause:
   * `MONGODB_PASSWORD`
   * `MONGODB_DATABASE`
   * `MONGODB_ADMIN_PASSWORD`
-  * either root_password or user+password+database must be set if running with empty datadir, both combination is also valid
-  * `MONGODB_DISABLE_CREATE_DB` -- when set, it disables initializing DB and no other variables from the set above is required
+  * if either admin_password or user+password+database is set, then the authentication is enabled.
 
 
 ### httpd dockerfile:
@@ -342,19 +341,19 @@ Defining those variables will cause:
 
 ### httpd-php dockerfile:
 
-* Includes all from httpd dockerfile
+* Includes all from httpd dockerfile above
 * Packages installed: `<php_collection>`, `<php_collection>-php`
 
 
 ### httpd-python dockerfile:
 
-* Includes all from httpd dockerfile
+* Includes all from httpd dockerfile above
 * Packages installed: `<python_collection>`, `<python_collection>-mod_wsgi`
 
 
 ### httpd-perl dockerfile:
 
-* Includes all from httpd dockerfile
+* Includes all from httpd dockerfile above
 * Packages installed: `<perl_collection>`, `<perl_collection>-mod_perl`
 
 
