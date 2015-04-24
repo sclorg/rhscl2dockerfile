@@ -7,31 +7,5 @@ RUN yum update -y && yum install -y yum-utils && \
     yum-config-manager --enable rhel-6-server-optional-rpms && \
     yum install -y --setopt=tsflags=nodocs {{ install }} && yum clean all
 
-{% if expose is defined %}{% for port in expose %}
-EXPOSE {{ port }}
-{%- endfor -%}{% endif %}
-{%- if envs is defined %}{% for e in envs %}
-ENV {{ e }}
-{%- endfor -%}{% endif %}
+{% include './Dockerfile.content.template' %}
 
-ADD ./enable{{ collection }}.sh /etc/profile.d/
-{%- if add_files is defined %}{% for f in add_files %}
-ADD {{ f['src'] }} {{ f['dst'] }}
-{%- endfor -%}{% endif %}
-{%- if run is defined %}
-
-RUN	{% for c in run -%}
-{{ c }} && \
-	{% endfor -%}:{% endif %}
-{% if user %}
-USER {{ user|replace("'", "\"") }}
-{% endif -%}
-{% if volume %}
-VOLUME {{ volume|replace("'", "\"") }}
-{% endif -%}
-{% if entrypoint %}
-ENTRYPOINT {{ entrypoint|replace("'", "\"") }}
-{% endif -%}
-{% if cmd %}
-CMD {{ cmd|replace("'", "\"") }}
-{% endif -%}
