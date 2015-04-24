@@ -112,6 +112,20 @@ containers:
   mongodb24:
     install: mongodb24
     expose: [27017, 28017]
+    envs:
+      - "HOME            /var/lib/mongodb"
+    add:
+      - [cont-env.sh, .bashrc, $HOME]
+      - [mongodb/cont-mongod-daemon.sh, cont-mongod-daemon, /usr/bin/]
+      - [mongodb/mongod.conf, mongod.conf, /etc]
+      - [mongodb/init-users.sh, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
+    run:
+      - mkdir -p /var/lib/mongodb/data
+      - chown -R mongodb:mongodb /var/lib/mongodb/
+      - restorecon -R /var/lib/mongodb/
+    volume: /var/lib/mongodb/data
+    user: mongodb
+    cmd: ["cont-mongod-daemon"]
   httpd24:
     install: httpd24
     expose: [80, 443]
@@ -213,6 +227,20 @@ containers:
   rh-mongodb26:
     install: rh-mongodb26
     expose: [27017, 28017]
+    envs:
+      - "HOME            /var/lib/mongodb"
+    add:
+      - [cont-env.sh, .bashrc, $HOME]
+      - [mongodb/cont-mongod-daemon.sh, cont-mongod-daemon, /usr/bin/]
+      - [mongodb/mongod.conf, mongod.conf, /etc]
+      - [mongodb/init-users.sh, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
+    run:
+      - mkdir -p /var/lib/mongodb/data
+      - chown -R mongodb:mongodb /var/lib/mongodb/
+      - restorecon -R /var/lib/mongodb/
+    volume: /var/lib/mongodb/data
+    user: mongodb
+    cmd: ["cont-mongod-daemon"]
   rh-mysql56:
     install: rh-mysql56
     expose: [3306]
