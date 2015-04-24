@@ -1,11 +1,13 @@
 {% if expose is defined %}{% for port in expose %}
 EXPOSE {{ port }}
 {%- endfor %}{% endif %}
-{% if envs is defined %}{%- for e in envs %}
-ENV {{ e }}
-{%- endfor %}{% endif %}
 
-ADD ./cont-env.sh $HOME/.bashrc
+ENV BASH_ENV        /etc/profile.d/cont-env.sh
+{%- if envs is defined %}{% for e in envs %}
+ENV {{ e }}
+{%- endfor -%}{% endif %}
+
+ADD ./cont-env.sh /root/.bashrc
 ADD ./cont-env.sh /etc/profile.d/cont-env.sh
 ADD ./functions.sh /usr/share/cont-layer/common/
 ADD ./enable{{ collection }}.sh /usr/share/cont-layer/common/env.d/
