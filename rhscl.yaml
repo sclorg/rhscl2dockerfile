@@ -55,6 +55,7 @@ templates:
     README.template: README.md
     cont-env.sh: cont-env.sh
     functions.sh: functions.sh
+
   rhel7:
     Dockerfile.RHEL7.template: Dockerfile
     enable.sh: enable{{collection}}.sh
@@ -67,11 +68,47 @@ templates:
 # be defined if not the name used here.
 containers:
   mariadb55:
-    install: mariadb55
+    install: mariadb55 hostname
     expose: [3306]
+    envs:
+      - "HOME            /var/lib/mysql"
+    add:
+      - [cont-env.sh, .bashrc, $HOME]
+      - [mysql-common/cont-mysqld, cont-mysqld, /usr/bin/]
+      - [mysql-common/my.cnf.tpl, my.cnf, /opt/rh/mariadb55/root/etc/]
+      - [mysql-common/init-base.sh, 10-base.sh, /usr/share/cont-layer/mysql/post-init.d/]
+      - [mysql-common/config-env.sh, 20-config-env.sh, /usr/share/cont-layer/mysql/post-init.d/]
+      - [mysql-common/cont-setup.sh.tpl, cont-setup, /usr/libexec/]
+    files:
+      - [mysql-common/README.md.tpl, README.md]
+    run:
+      - /usr/libexec/cont-setup
+    volume: ["/var/lib/mysql/data"]
+    user: mysql
+    cmd: ["cont-mysqld"]
+    logfile: /var/log/mariadb/mariadb.log
+    pidfile: /var/run/mariadb/mariadb.pid
   mysql55:
-    install: mysql55
+    install: mysql55 hostname
     expose: [3306]
+    envs:
+      - "HOME            /var/lib/mysql"
+    add:
+      - [cont-env.sh, .bashrc, $HOME]
+      - [mysql-common/cont-mysqld, cont-mysqld, /usr/bin/]
+      - [mysql-common/my.cnf.tpl, my.cnf, /opt/rh/mysql55/root/etc/]
+      - [mysql-common/init-base.sh, 10-base.sh, /usr/share/cont-layer/mysql/post-init.d/]
+      - [mysql-common/config-env.sh, 20-config-env.sh, /usr/share/cont-layer/mysql/post-init.d/]
+      - [mysql-common/cont-setup.sh.tpl, cont-setup, /usr/libexec/]
+    files:
+      - [mysql-common/README.md.tpl, README.md]
+    run:
+      - /usr/libexec/cont-setup
+    volume: ["/var/lib/mysql/data"]
+    user: mysql
+    cmd: ["cont-mysqld"]
+    logfile: /var/log/mysql/mysqld.log
+    pidfile: /var/run/mysql/mysqld.pid
   mongodb24:
     install: mongodb24
     expose: [27017, 28017]
@@ -155,12 +192,48 @@ containers:
   rh-mariadb100:
     install: rh-mariadb100
     expose: [3306]
+    envs:
+      - "HOME            /var/lib/mysql"
+    add:
+      - [cont-env.sh, .bashrc, $HOME]
+      - [mysql-common/cont-mysqld, cont-mysqld, /usr/bin/]
+      - [mysql-common/my.cnf.tpl, my.cnf, /opt/rh/mariadb55/root/etc/]
+      - [mysql-common/init-base.sh, 10-base.sh, /usr/share/cont-layer/mysql/post-init.d/]
+      - [mysql-common/config-env.sh, 20-config-env.sh, /usr/share/cont-layer/mysql/post-init.d/]
+      - [mysql-common/cont-setup.sh.tpl, cont-setup, /usr/libexec/]
+    files:
+      - [mysql-common/README.md.tpl, README.md]
+    run:
+      - /usr/libexec/cont-setup
+    volume: ["/var/lib/mysql/data"]
+    user: mysql
+    cmd: ["cont-mysqld"]
+    logfile: /var/log/mariadb/mariadb.log
+    pidfile: /var/run/mariadb/mariadb.pid
   rh-mongodb26:
     install: rh-mongodb26
     expose: [27017, 28017]
   rh-mysql56:
     install: rh-mysql56
     expose: [3306]
+    envs:
+      - "HOME            /var/lib/mysql"
+    add:
+      - [cont-env.sh, .bashrc, $HOME]
+      - [mysql-common/cont-mysqld, cont-mysqld, /usr/bin/]
+      - [mysql-common/my.cnf.tpl, my.cnf, /opt/rh/mysql55/root/etc/]
+      - [mysql-common/init-base.sh, 10-base.sh, /usr/share/cont-layer/mysql/post-init.d/]
+      - [mysql-common/config-env.sh, 20-config-env.sh, /usr/share/cont-layer/mysql/post-init.d/]
+      - [mysql-common/cont-setup.sh.tpl, cont-setup, /usr/libexec/]
+    files:
+      - [mysql-common/README.md.tpl, README.md]
+    run:
+      - /usr/libexec/cont-setup
+    volume: ["/var/lib/mysql/data"]
+    user: mysql
+    cmd: ["cont-mysqld"]
+    logfile: /var/log/mysql/mysqld.log
+    pidfile: /var/run/mysql/mysqld.pid
   rh-passenger40:
     install: rh-passenger40 rh-passenger40-ruby22
     enable: [rh-passenger40, rh-ruby22]
