@@ -53,10 +53,14 @@ templates:
     Dockerfile.RHEL6.template: Dockerfile
     enable.sh: enable{{collection}}.sh
     README.template: README.md
+    cont-env.sh: cont-env.sh
+    functions.sh: functions.sh
   rhel7:
     Dockerfile.RHEL7.template: Dockerfile
     enable.sh: enable{{collection}}.sh
     README.template: README.md
+    cont-env.sh: cont-env.sh
+    functions.sh: functions.sh
 
 # For each container to define, define packages parameter to yum
 # install plus list of ports to expose.  The SCL collection name must
