@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from jinja2 import Environment, Template
+from jinja2 import Environment, Template, FileSystemLoader
 import yaml
 import os
 import sys
@@ -133,6 +133,7 @@ class DockerfileGenerator:
         self.config_file = config_file
         self.y = yaml.safe_load(open(self.config_file))
         self.env = Environment(keep_trailing_newline=True)
+        self.env.loader = FileSystemLoader('.')
         self.cwd = os.path.dirname(self.config_file)
         self.result_dir = result_dir
 
