@@ -117,11 +117,15 @@ containers:
     add:
       - [cont-env.sh, .bashrc, $HOME]
       - [mongodb/cont-mongod-daemon.sh, cont-mongod-daemon, /usr/bin/]
+      - [mongodb/cont-mongos-daemon.sh, cont-mongos-daemon, /usr/bin/]
       - [mongodb/mongod.conf, mongod.conf, /etc]
+      - [mongodb/mongos.conf, mongos.conf, /etc]
       - [mongodb/init-users.sh, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
+    files:
+      - [mongodb/README.md.tpl, README.md]
     run:
-      - mkdir -p /var/lib/mongodb/data
-      - chown -R mongodb:mongodb /var/lib/mongodb/
+      - mkdir -p /var/lib/mongodb/data /var/run/mongodb
+      - chown -R mongodb:mongodb /var/lib/mongodb/ /var/run/mongodb /etc/mongod.conf /etc/mongos.conf
       - restorecon -R /var/lib/mongodb/
     volume: /var/lib/mongodb/data
     user: mongodb
@@ -232,11 +236,15 @@ containers:
     add:
       - [cont-env.sh, .bashrc, $HOME]
       - [mongodb/cont-mongod-daemon.sh, cont-mongod-daemon, /usr/bin/]
+      - [mongodb/cont-mongos-daemon.sh, cont-mongos-daemon, /usr/bin/]
       - [mongodb/mongod.conf, mongod.conf, /etc]
+      - [mongodb/mongos.conf, mongos.conf, /etc]
       - [mongodb/init-users.sh, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
+    files:
+      - [mongodb/README.md.tpl, README.md]
     run:
-      - mkdir -p /var/lib/mongodb/data
-      - chown -R mongodb:mongodb /var/lib/mongodb/
+      - mkdir -p /var/lib/mongodb/data /var/run/mongodb
+      - chown -R mongodb:mongodb /var/lib/mongodb/ /var/run/mongodb /etc/mongod.conf /etc/mongos.conf
       - restorecon -R /var/lib/mongodb/
     volume: /var/lib/mongodb/data
     user: mongodb
