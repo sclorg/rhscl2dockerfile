@@ -116,11 +116,12 @@ containers:
       - "HOME            /var/lib/mongodb"
     add:
       - [cont-env.sh, .bashrc, $HOME]
-      - [mongodb/cont-mongod-daemon.sh, cont-mongod-daemon, /usr/bin/]
-      - [mongodb/cont-mongos-daemon.sh, cont-mongos-daemon, /usr/bin/]
+      - [mongodb/cont-mongod.sh, cont-mongod, /usr/bin/]
+      - [mongodb/cont-mongos.sh, cont-mongos, /usr/bin/]
       - [mongodb/mongod.conf, mongod.conf, /etc]
       - [mongodb/mongos.conf, mongos.conf, /etc]
       - [mongodb/init-users.sh, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
+      - [mongodb/base-functions.sh, base-functions.sh, /usr/share/cont-layer/mongodb/common/]
     files:
       - [mongodb/README.md.tpl, README.md]
     run:
@@ -129,7 +130,7 @@ containers:
       - restorecon -R /var/lib/mongodb/
     volume: /var/lib/mongodb/data
     user: mongodb
-    cmd: ["cont-mongod-daemon"]
+    cmd: ["cont-mongod"]
   httpd24:
     install: httpd24
     expose: [80, 443]
@@ -235,11 +236,12 @@ containers:
       - "HOME            /var/lib/mongodb"
     add:
       - [cont-env.sh, .bashrc, $HOME]
-      - [mongodb/cont-mongod-daemon.sh, cont-mongod-daemon, /usr/bin/]
-      - [mongodb/cont-mongos-daemon.sh, cont-mongos-daemon, /usr/bin/]
+      - [mongodb/cont-mongod.sh, cont-mongod, /usr/bin/]
+      - [mongodb/cont-mongos.sh, cont-mongos, /usr/bin/]
       - [mongodb/mongod.conf, mongod.conf, /etc]
       - [mongodb/mongos.conf, mongos.conf, /etc]
       - [mongodb/init-users.sh, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
+      - [mongodb/base-functions.sh, base-functions.sh, /usr/share/cont-layer/mongodb/common/]
     files:
       - [mongodb/README.md.tpl, README.md]
     run:
@@ -248,7 +250,7 @@ containers:
       - restorecon -R /var/lib/mongodb/
     volume: /var/lib/mongodb/data
     user: mongodb
-    cmd: ["cont-mongod-daemon"]
+    cmd: ["cont-mongod"]
   rh-mysql56:
     install: rh-mysql56
     expose: [3306]
