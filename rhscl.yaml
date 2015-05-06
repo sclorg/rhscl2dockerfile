@@ -278,7 +278,8 @@ containers:
   rh-php56:
     install: rh-php56
   rh-python34:
-    install: rh-python34
+    install: rh-python34 rh-python34-python-devel rh-python34-python-setuptools
+    expose: [8000]
   rh-ror41:
     install: rh-ror41
   rh-ruby22:
