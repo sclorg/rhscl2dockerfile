@@ -110,7 +110,7 @@ containers:
     logfile: /var/log/mysql/mysqld.log
     pidfile: /var/run/mysql/mysqld.pid
   mongodb24:
-    install: mongodb24
+    install: mongodb24 mongodb24-mongodb
     expose: [27017, 28017]
     envs:
       - "HOME            /var/lib/mongodb"
@@ -230,7 +230,7 @@ containers:
     logfile: /var/log/mariadb/mariadb.log
     pidfile: /var/run/mariadb/mariadb.pid
   rh-mongodb26:
-    install: rh-mongodb26
+    install: rh-mongodb26 rh-mongodb26-mongodb
     expose: [27017, 28017]
     envs:
       - "HOME            /var/lib/mongodb"
