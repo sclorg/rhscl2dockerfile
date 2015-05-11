@@ -28,9 +28,12 @@ class CollectionGenerator:
             files = os.listdir(src)
             for f in files:
                 self.copy_render(os.path.join(src, f), 
-                                 os.path.join(dst, f))
+                                 os.path.join(dst, f),
+                                 allways_render=allways_render)
         else:
             if allways_render or src.endswith('.tpl'):
+                if dst.endswith('.tpl'):
+                    dst = dst[0:-4]
                 # Construct a template, render dst, write, done.
                 with open(src, 'r') as f:
                     temp = self.gen.env.from_string(f.read())
@@ -62,14 +65,24 @@ class CollectionGenerator:
         for f in add_files:
             try:
                 [src, dst_file, dst_dir] = f
+                dst_file = self.gen.env.from_string(dst_file).render(self.cvars)
+                dst_dir = self.gen.env.from_string(dst_dir).render(self.cvars)
                 # we use dst_file here since that is how the file is called
                 # in the dockerfile directory
-                result.append({'src': os.path.join('.', dst_file),
-                               'dst': os.path.join(dst_dir, dst_file)})
                 self.copy_render(os.path.join(self.gen.cwd, src),
                                  os.path.join(self.outdir, dst_file),
                                  allways_render=False)
-                print("wrote %s for %s on %s" % (dst_file, self.collection, self.tname))
+                print("wrote %s for %s on %s" % (os.path.join(self.outdir, dst_file), self.collection, self.tname))
+                d_src = os.path.join('.', dst_file)
+                d_dst = os.path.join(dst_dir, dst_file)
+                uniq = True
+                for i in result:
+                    if i['src'] == d_src and i['dst'] == d_dst:
+                        uniq = False
+                if not uniq:
+                    continue
+                result.append({'src': d_src,
+                               'dst': d_dst})
             except ValueError:
                 print('Error: added files spec has incorrect format: {}'.format(f))
         self.cvars['add_files'] = result
@@ -95,7 +108,7 @@ class CollectionGenerator:
                 self.copy_render(os.path.join(self.gen.cwd, src),
                                  os.path.join(self.outdir, dst_file),
                                  allways_render=False)
-                print("wrote %s for %s on %s" % (dst_file, self.collection, self.tname))
+                print("wrote %s for %s on %s" % (os.path.join(self.outdir, dst_file), self.collection, self.tname))
             except ValueError:
                 print('Error: files spec has incorrect format: {}'.format(f))
 
@@ -104,6 +117,16 @@ class CollectionGenerator:
         """
         Set up collection variables which can be substituted in templates
         """
+        # copy values from template, just add no overwrite nor add duplicates
+        for k in self.tvars:
+            if k not in self.cvars:
+                self.cvars[k] = self.tvars[k]
+            elif type(self.cvars[k]) is list:
+                for kk in self.tvars[k]:
+                    if kk not in self.cvars[k]:
+                        self.cvars[k].append(kk)
+
+        # add some more values specific for the collection
         self.cvars["container"] = self.collection
         if 'collection' not in self.cvars:
             self.cvars["collection"] = self.collection
@@ -116,15 +139,8 @@ class CollectionGenerator:
         Generates Dockerfile and files for one collection
         """
         self.outdir = outdir
-        print(outdir)
         self.set_defaults()
         self.handle_add_files()
-        for src, dst in self.tvars.items():
-            # Allow use of variables in dst filenames as well as files
-            dst = Template(dst).render(self.cvars)
-            self.copy_render(os.path.join(self.gen.cwd, src),
-                             os.path.join(self.outdir, dst))
-            print("wrote %s for %s on %s" % (dst, self.collection, self.tname))
         self.handle_other_files()
 
 

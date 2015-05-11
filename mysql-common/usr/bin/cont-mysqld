@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. "/usr/share/cont-lib/cont-lib.sh"
+
 # Data directory where MySQL database files live. The data subdirectory is here
 # because .bashrc and my.cnf both live in /var/lib/mysql/ and we don't want a
 # volume to override it.
@@ -15,8 +17,6 @@ export MYSQL_PREFIX=$(which mysqld_safe|sed -e 's|/bin/mysqld_safe$||')
 # https://dev.mysql.com/doc/refman/5.5/en/identifiers.html
 export mysql_identifier_regex='^[a-zA-Z0-9_]+$'
 export mysql_password_regex='^[a-zA-Z0-9_~!@#$%^&*()-=<>,.?;:|]+$'
-
-source /usr/share/cont-layer/common/functions.sh
 
 # Poll until MySQL responds to our ping.
 function wait_for_mysql() {
@@ -52,7 +52,7 @@ function initialize_database() {
 	wait_for_mysql $mysql_pid
 
 	echo "Reading scripts that may adjust initialization"
-	cont_source_scripts mysql post-init
+	cont_source_hooks post-init mysql
 
 	mysqladmin $admin_flags flush-privileges shutdown
 }

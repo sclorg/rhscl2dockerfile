@@ -50,18 +50,28 @@ templates:
   # for each distribution, declare a list of filename mappings
   # <Template> : <Output-Filename>
   rhel6:
-    Dockerfile.RHEL6.template: Dockerfile
-    enable.sh: enable{{collection}}.sh
-    README.template: README.md
-    cont-env.sh: cont-env.sh
-    functions.sh: functions.sh
+    add:
+      - [common/enable.sh.tpl, "enable{{collection}}.sh", /usr/share/cont-layer/common/env/]
+      - [common/cont-lib/usr, usr, /]
+      - [common/cont-lib/etc, etc, /]
+      - [common/cont-lib/root, root, /]
+    files:
+      - [Dockerfile.RHEL6.tpl, Dockerfile]
+      - [README.tpl, README.md]
+    envs:
+      - "BASH_ENV        /etc/profile.d/cont-env.sh"
 
   rhel7:
-    Dockerfile.RHEL7.template: Dockerfile
-    enable.sh: enable{{collection}}.sh
-    README.template: README.md
-    cont-env.sh: cont-env.sh
-    functions.sh: functions.sh
+    add:
+      - [common/enable.sh.tpl, "enable{{collection}}.sh", /usr/share/cont-layer/common/env/]
+      - [common/cont-lib/usr, usr, /]
+      - [common/cont-lib/etc, etc, /]
+      - [common/cont-lib/root, root, /]
+    files:
+      - [Dockerfile.RHEL7.tpl, Dockerfile]
+      - [README.tpl, README.md]
+    envs:
+      - "BASH_ENV        /etc/profile.d/cont-env.sh"
 
 # For each container to define, define packages parameter to yum
 # install plus list of ports to expose.  The SCL collection name must
@@ -73,12 +83,10 @@ containers:
     envs:
       - "HOME            /var/lib/mysql"
     add:
-      - [cont-env.sh, .bashrc, $HOME]
-      - [mysql-common/cont-mysqld, cont-mysqld, /usr/bin/]
-      - [mysql-common/my.cnf.tpl, my.cnf, /opt/rh/mariadb55/root/etc/]
-      - [mysql-common/init-base.sh, 10-base.sh, /usr/share/cont-layer/mysql/post-init.d/]
-      - [mysql-common/config-env.sh, 20-config-env.sh, /usr/share/cont-layer/mysql/post-init.d/]
-      - [mysql-common/cont-setup.sh.tpl, cont-setup, /usr/libexec/]
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
+      - [mysql-common/usr, usr, /]
+      - [mysql-common/opt, opt, /]
+      - [mysql-common/my.cnf.tpl, my.cnf, "/opt/rh/{{ collection }}/root/etc"]
     files:
       - [mysql-common/README.md.tpl, README.md]
     run:
@@ -94,12 +102,10 @@ containers:
     envs:
       - "HOME            /var/lib/mysql"
     add:
-      - [cont-env.sh, .bashrc, $HOME]
-      - [mysql-common/cont-mysqld, cont-mysqld, /usr/bin/]
-      - [mysql-common/my.cnf.tpl, my.cnf, /opt/rh/mysql55/root/etc/]
-      - [mysql-common/init-base.sh, 10-base.sh, /usr/share/cont-layer/mysql/post-init.d/]
-      - [mysql-common/config-env.sh, 20-config-env.sh, /usr/share/cont-layer/mysql/post-init.d/]
-      - [mysql-common/cont-setup.sh.tpl, cont-setup, /usr/libexec/]
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
+      - [mysql-common/usr, usr, /]
+      - [mysql-common/opt, opt, /]
+      - [mysql-common/my.cnf.tpl, my.cnf, "/opt/rh/{{ collection }}/root/etc"]
     files:
       - [mysql-common/README.md.tpl, README.md]
     run:
@@ -115,7 +121,7 @@ containers:
     envs:
       - "HOME            /var/lib/mongodb"
     add:
-      - [cont-env.sh, .bashrc, $HOME]
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mongodb/cont-mongod.sh, cont-mongod, /usr/bin/]
       - [mongodb/cont-mongos.sh, cont-mongos, /usr/bin/]
       - [mongodb/mongod.conf, mongod.conf, /etc]
@@ -175,6 +181,19 @@ containers:
   postgresql92:
     install: postgresql92
     expose: [5432]
+    envs:
+      - "HOME            /var/lib/pgsql"
+    add:
+      - [common/cont-lib/root/.bashrc, .bashrc, /var/lib/pgsql/]
+      - [postgresql/usr, usr, /]
+      - [postgresql/var, var, /]
+      - [postgresql/cont-setup.sh, cont-setup, /usr/libexec/]
+    run:
+      - /usr/libexec/cont-setup
+    volume: ["/var/lib/pgsql/data"]
+    user: postgres
+    entrypoint: ["/usr/bin/cont-entry"]
+    cmd: ["cont-postgresql-cmd"]
   python27:
     install: python27
   python33:
@@ -214,12 +233,10 @@ containers:
     envs:
       - "HOME            /var/lib/mysql"
     add:
-      - [cont-env.sh, .bashrc, $HOME]
-      - [mysql-common/cont-mysqld, cont-mysqld, /usr/bin/]
-      - [mysql-common/my.cnf.tpl, my.cnf, /opt/rh/mariadb55/root/etc/]
-      - [mysql-common/init-base.sh, 10-base.sh, /usr/share/cont-layer/mysql/post-init.d/]
-      - [mysql-common/config-env.sh, 20-config-env.sh, /usr/share/cont-layer/mysql/post-init.d/]
-      - [mysql-common/cont-setup.sh.tpl, cont-setup, /usr/libexec/]
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
+      - [mysql-common/usr, usr, /]
+      - [mysql-common/opt, opt, /]
+      - [mysql-common/my.cnf.tpl, my.cnf, "/etc/opt/rh/{{ collection }}/"]
     files:
       - [mysql-common/README.md.tpl, README.md]
     run:
@@ -235,7 +252,7 @@ containers:
     envs:
       - "HOME            /var/lib/mongodb"
     add:
-      - [cont-env.sh, .bashrc, $HOME]
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mongodb/cont-mongod.sh, cont-mongod, /usr/bin/]
       - [mongodb/cont-mongos.sh, cont-mongos, /usr/bin/]
       - [mongodb/mongod.conf, mongod.conf, /etc]
@@ -257,12 +274,10 @@ containers:
     envs:
       - "HOME            /var/lib/mysql"
     add:
-      - [cont-env.sh, .bashrc, $HOME]
-      - [mysql-common/cont-mysqld, cont-mysqld, /usr/bin/]
-      - [mysql-common/my.cnf.tpl, my.cnf, /opt/rh/mysql55/root/etc/]
-      - [mysql-common/init-base.sh, 10-base.sh, /usr/share/cont-layer/mysql/post-init.d/]
-      - [mysql-common/config-env.sh, 20-config-env.sh, /usr/share/cont-layer/mysql/post-init.d/]
-      - [mysql-common/cont-setup.sh.tpl, cont-setup, /usr/libexec/]
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
+      - [mysql-common/usr, usr, /]
+      - [mysql-common/opt, opt, /]
+      - [mysql-common/my.cnf.tpl, my.cnf, "/etc/opt/rh/{{ collection }}/"]
     files:
       - [mysql-common/README.md.tpl, README.md]
     run:
