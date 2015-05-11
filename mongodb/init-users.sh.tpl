@@ -9,7 +9,11 @@ function mongo_create_users() {
     # Set admin password
     #echo "=> Creating MongoDB admin user with password: ${MONGODB_ADMIN_PASSWORD}"
     set +e
+    {%- if collection == 'mongodb24' %}
     mongo admin --eval "db.addUser({user: 'admin', pwd: '${MONGODB_ADMIN_PASSWORD}', roles: ['dbAdminAnyDatabase', 'userAdminAnyDatabase' , 'readWriteAnyDatabase','clusterAdmin' ]});"
+    {% else %}
+    mongo admin --eval "db.createUser({user: 'admin', pwd: '${MONGODB_ADMIN_PASSWORD}', roles: ['dbAdminAnyDatabase', 'userAdminAnyDatabase' , 'readWriteAnyDatabase','clusterAdmin' ]});"
+    {% endif -%}
     result=$?
     set -e
 
@@ -35,7 +39,11 @@ function mongo_create_users() {
         fi
         #echo "=> Creating a ${MONGODB_USER} user in MongoDB with password: ${MONGODB_PASSWORD}"
         set +e
+        {% if collection == 'mongodb24' -%}
         mongo ${MONGODB_DATABASE} --eval "db.addUser({user: '${MONGODB_USER}', pwd: '${MONGODB_PASSWORD}', roles: [ 'readWrite' ]});"
+        {%- else -%}
+        mongo ${MONGODB_DATABASE} --eval "db.createUser({user: '${MONGODB_USER}', pwd: '${MONGODB_PASSWORD}', roles: [ 'readWrite' ]});"
+        {%- endif %}
         result=$?
         set -e
 
