@@ -257,7 +257,7 @@ containers:
       - [mongodb/cont-mongos.sh, cont-mongos, /usr/bin/]
       - [mongodb/mongod.conf, mongod.conf, /etc]
       - [mongodb/mongos.conf, mongos.conf, /etc]
-      - [mongodb/init-users.sh, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
+      - [mongodb/init-users.sh.v26, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
       - [mongodb/base-functions.sh, base-functions.sh, /usr/share/cont-layer/mongodb/common/]
     files:
       - [mongodb/README.md.tpl, README.md]

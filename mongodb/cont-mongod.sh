@@ -8,7 +8,7 @@ source /usr/share/cont-layer/mongodb/common/base-functions.sh
 function cleanup() {
     echo "=> Shutting down MongoDB server"
     if [ -s $dbpath/mongod.lock ]; then
-        mongod $mongo_common_args --shutdown
+        mongod $mongod_common_args --shutdown
     fi
     wait_mongo "DOWN"
 
@@ -36,22 +36,22 @@ trap 'cleanup' SIGINT SIGTERM
 cont_source_scripts mongodb pre-init
 
 # Add default config file
-mongo_common_args="-f $mongod_config_file "
+mongod_common_args="-f $mongod_config_file "
 mongo_local_args="--bind_ip localhost "
 
 # Start background MongoDB service with disabled authentication
-mongod $mongo_common_args $mongo_local_args &
+mongod $mongod_common_args $mongo_local_args &
 wait_mongo "UP"
 
 # Run scripts with started mongod
 cont_source_scripts mongodb init
 
 # Stop background MongoDB service to exec mongod
-mongod $mongo_common_args $mongo_local_args --shutdown
+mongod $mongod_common_args $mongo_local_args --shutdown
 wait_mongo "DOWN"
 
 # Run scripts after mongod stoped
 cont_source_scripts mongodb post-init
 
 # Start MongoDB service with enabled authentication
-exec mongod $mongo_common_args
+exec mongod $mongod_common_args

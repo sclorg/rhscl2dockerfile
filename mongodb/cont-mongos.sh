@@ -46,11 +46,11 @@ trap 'cleanup' SIGINT SIGTERM
 cont_source_scripts mongodb pre-init
 
 # Add default config file
-mongo_common_args="-f $mongos_config_file "
+mongos_common_args="-f $mongos_config_file "
 mongo_local_args="--bind_ip localhost "
 
 # Start background MongoDB service with disabled authentication
-mongos $mongo_common_args $mongo_local_args &
+mongos $mongos_common_args $mongo_local_args &
 wait_mongo "UP"
 
 # Run scripts with started mongod
@@ -63,7 +63,7 @@ set -e
 wait_mongo "DOWN"
 status=$?
 
-if [ $status -ne 0]; then
+if [ $status -ne 0 ]; then
     set +e
     kill -9 $(cat $pidfile)
     set -e
@@ -74,4 +74,4 @@ fi
 cont_source_scripts mongodb post-init
 
 # Start MongoDB service with enabled authentication
-exec mongos $mongo_common_args
+exec mongos $mongos_common_args
