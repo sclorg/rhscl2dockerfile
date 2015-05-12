@@ -117,11 +117,14 @@ class CollectionGenerator:
         """
         Set up collection variables which can be substituted in templates
         """
+        # fields that should be overwritten if they are lists, not merged
+        overwrite_fields = ['cmd', 'entrypoint', 'from']
+
         # copy values from template, just add no overwrite nor add duplicates
         for k in self.tvars:
             if k not in self.cvars:
                 self.cvars[k] = self.tvars[k]
-            elif type(self.cvars[k]) is list:
+            elif k not in overwrite_fields and type(self.cvars[k]) is list:
                 for kk in self.tvars[k]:
                     if kk not in self.cvars[k]:
                         self.cvars[k].append(kk)

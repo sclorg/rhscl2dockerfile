@@ -60,6 +60,7 @@ templates:
       - [README.tpl, README.md]
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
+    cmd: ["container-usage"]
 
   rhel7:
     add:
@@ -72,6 +73,7 @@ templates:
       - [README.tpl, README.md]
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
+    cmd: ["container-usage"]
 
 # For each container to define, define packages parameter to yum
 # install plus list of ports to expose.  The SCL collection name must
