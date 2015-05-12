@@ -23,7 +23,7 @@ What will be used in the docker images as the base image:
 
 For installing necessary packages, the following repositories are enabled for RHEL-based images:
 ````
-RUN yum update -y && yum install -y yum-utils && \
+RUN yum install -y yum-utils && \
     yum-config-manager --enable rhel-server-rhscl-7-rpms && \
     yum-config-manager --enable rhel-7-server-optional-rpms
 ````
