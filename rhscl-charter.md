@@ -343,7 +343,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 
 ### httpd dockerfile:
 
-* `EXPOSE` 80, 443
+* `EXPOSE` 8080, 8443
 * Config dir: `/etc/httpd`
 * Daemon runs as `apache` (USER directive)
 * Log file: `/var/log/httpd/`
