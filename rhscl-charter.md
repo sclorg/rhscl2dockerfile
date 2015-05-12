@@ -181,14 +181,14 @@ If there is a port that is usually used for development or production, this port
 
 
 ### ruby dockerfile:
-* collections: `ror40` `ruby200` `v8314`
-* extra packages: `ruby-devel` `rubygem-rake`  `rubygem-bundler`
+* collections: `ruby22`
+* extra packages: `ruby-devel`  `rubygem-bundler`
 * `EXPOSE` 8080
 
 
 ### rails dockerfile:
-* collections: `ror40` `ruby200`
-* extra packages: all rails gems
+* collections: `ror41` `ruby22` `nodejs010`
+* extra packages: just what ror41 installs by default
 * `EXPOSE` 8080
 
 
