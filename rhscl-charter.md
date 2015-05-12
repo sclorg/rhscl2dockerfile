@@ -193,7 +193,7 @@ If there is a port that is usually used for development or production, this port
 
 
 ### nodejs dockerfile:
-* TODO: `EXPOSE` 80 or 8080?
+* `EXPOSE` 8080
 
 
 ### perl dockerfile:
