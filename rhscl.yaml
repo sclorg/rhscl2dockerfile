@@ -85,7 +85,6 @@ containers:
     add:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
-      - [mysql-common/opt, opt, /]
       - [mysql-common/my.cnf.tpl, my.cnf, "/opt/rh/{{ collection }}/root/etc"]
     files:
       - [mysql-common/README.md.tpl, README.md]
@@ -104,7 +103,6 @@ containers:
     add:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
-      - [mysql-common/opt, opt, /]
       - [mysql-common/my.cnf.tpl, my.cnf, "/opt/rh/{{ collection }}/root/etc"]
     files:
       - [mysql-common/README.md.tpl, README.md]
@@ -235,7 +233,6 @@ containers:
     add:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
-      - [mysql-common/opt, opt, /]
       - [mysql-common/my.cnf.tpl, my.cnf, "/etc/opt/rh/{{ collection }}/"]
     files:
       - [mysql-common/README.md.tpl, README.md]
@@ -276,7 +273,6 @@ containers:
     add:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
-      - [mysql-common/opt, opt, /]
       - [mysql-common/my.cnf.tpl, my.cnf, "/etc/opt/rh/{{ collection }}/"]
     files:
       - [mysql-common/README.md.tpl, README.md]
