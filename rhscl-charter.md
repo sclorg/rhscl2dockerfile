@@ -23,7 +23,7 @@ What will be used in the docker images as the base image:
 
 For installing necessary packages, the following repositories are enabled for RHEL-based images:
 ````
-RUN yum update -y && yum install -y yum-utils && \
+RUN yum install -y yum-utils && \
     yum-config-manager --enable rhel-server-rhscl-7-rpms && \
     yum-config-manager --enable rhel-7-server-optional-rpms
 ````
@@ -181,19 +181,19 @@ If there is a port that is usually used for development or production, this port
 
 
 ### ruby dockerfile:
-* collections: `ror40` `ruby200` `v8314`
-* extra packages: `ruby-devel` `rubygem-rake`  `rubygem-bundler`
+* collections: `ruby22`
+* extra packages: `ruby-devel`  `rubygem-bundler`
 * `EXPOSE` 8080
 
 
 ### rails dockerfile:
-* collections: `ror40` `ruby200`
-* extra packages: all rails gems
+* collections: `ror41` `ruby22` `nodejs010`
+* extra packages: just what ror41 installs by default
 * `EXPOSE` 8080
 
 
 ### nodejs dockerfile:
-* TODO: `EXPOSE` 80 or 8080?
+* `EXPOSE` 8080
 
 
 ### perl dockerfile:
@@ -283,11 +283,11 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 * Available commands within container:
   * `run-mysqld` (default CMD)
 * `EXPOSE` 3306
-* Directory for data (VOLUME): `/var/lib/mysql/data`
+* Directory for data (specified as VOLUME): `/var/lib/mysql/data`
 * Config file: `/etc/my.cnf`, `/etc/my.cnf.d`
   * will be writable by `mysql` user, so they may be rewritten by process running under `mysql` user
 * Deamon runs as `mysql` user (`USER` directive)
-* Log file directory: `/var/log/<package>`, e.g. `/var/log/mariadb`
+* Log file directory (specified as VOLUME): `/var/log/<package>`, e.g. `/var/log/mariadb`
 * Socket file: not necessary, if proofed otherwise, `/var/lib/mysql/mysql.sock` will be used
 * Environment variables:
   * `MYSQL_USER` - Database user name
@@ -326,13 +326,13 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 * Available commands within container:
   * `run-mongod` (default CMD)
 * `EXPOSE` 27017,28017 (http://docs.mongodb.org/v2.6/reference/default-mongodb-port/)
-* Directory for data (VOLUME): `/var/lib/mongodb/data`
+* Directory for data (specified as VOLUME): `/var/lib/mongodb/data`
 * Config files:
   * `/etc/mongod.conf`
   * `/etc/mongos.conf`
   * those will be writable by `mongodb` user, so they may be rewritten by process running under `mongodb` user
 * Daemon runs as `mongodb` (USER directive)
-* Log file directory: `/var/log/mongodb/`
+* Log file directory (specified as VOLUME): `/var/log/mongodb/`
 * Environment variables:
   * `MONGODB_USER`
   * `MONGODB_PASSWORD`
@@ -343,7 +343,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 
 ### httpd dockerfile:
 
-* `EXPOSE` 80, 443
+* `EXPOSE` 8080, 8443
 * Config dir: `/etc/httpd`
 * Daemon runs as `apache` (USER directive)
 * Log file: `/var/log/httpd/`
