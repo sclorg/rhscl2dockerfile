@@ -50,27 +50,91 @@ templates:
   # for each distribution, declare a list of filename mappings
   # <Template> : <Output-Filename>
   rhel6:
-    Dockerfile.RHEL6.template: Dockerfile
-    enable.sh: enable{{collection}}.sh
-    README.template: README.md
+    add:
+      - [common/enable.sh.tpl, "enable{{collection}}.sh", /usr/share/cont-layer/common/env/]
+      - [common/cont-lib/usr, usr, /]
+      - [common/cont-lib/etc, etc, /]
+      - [common/cont-lib/root, root, /]
+    files:
+      - [Dockerfile.RHEL6.tpl, Dockerfile]
+      - [README.tpl, README.md]
+    envs:
+      - "BASH_ENV        /etc/profile.d/cont-env.sh"
+
   rhel7:
-    Dockerfile.RHEL7.template: Dockerfile
-    enable.sh: enable{{collection}}.sh
-    README.template: README.md
+    add:
+      - [common/enable.sh.tpl, "enable{{collection}}.sh", /usr/share/cont-layer/common/env/]
+      - [common/cont-lib/usr, usr, /]
+      - [common/cont-lib/etc, etc, /]
+      - [common/cont-lib/root, root, /]
+    files:
+      - [Dockerfile.RHEL7.tpl, Dockerfile]
+      - [README.tpl, README.md]
+    envs:
+      - "BASH_ENV        /etc/profile.d/cont-env.sh"
 
 # For each container to define, define packages parameter to yum
 # install plus list of ports to expose.  The SCL collection name must
 # be defined if not the name used here.
 containers:
   mariadb55:
-    install: mariadb55
+    install: mariadb55 hostname
     expose: [3306]
+    envs:
+      - "HOME            /var/lib/mysql"
+    add:
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
+      - [mysql-common/usr, usr, /]
+      - [mysql-common/my.cnf.tpl, my.cnf, "/opt/rh/{{ collection }}/root/etc"]
+    files:
+      - [mysql-common/README.md.tpl, README.md]
+    run:
+      - /usr/libexec/cont-setup
+    volume: ["/var/lib/mysql/data"]
+    user: mysql
+    cmd: ["cont-mysqld"]
+    logfile: /var/log/mariadb/mariadb.log
+    pidfile: /var/run/mariadb/mariadb.pid
   mysql55:
-    install: mysql55
+    install: mysql55 hostname
     expose: [3306]
+    envs:
+      - "HOME            /var/lib/mysql"
+    add:
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
+      - [mysql-common/usr, usr, /]
+      - [mysql-common/my.cnf.tpl, my.cnf, "/opt/rh/{{ collection }}/root/etc"]
+    files:
+      - [mysql-common/README.md.tpl, README.md]
+    run:
+      - /usr/libexec/cont-setup
+    volume: ["/var/lib/mysql/data"]
+    user: mysql
+    cmd: ["cont-mysqld"]
+    logfile: /var/log/mysql/mysqld.log
+    pidfile: /var/run/mysql/mysqld.pid
   mongodb24:
-    install: mongodb24
+    install: mongodb24 mongodb24-mongodb
     expose: [27017, 28017]
+    envs:
+      - "HOME            /var/lib/mongodb"
+    add:
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
+      - [mongodb/cont-mongod.sh, cont-mongod, /usr/bin/]
+      - [mongodb/cont-mongos.sh, cont-mongos, /usr/bin/]
+      - [mongodb/mongod.conf, mongod.conf, /etc]
+      - [mongodb/mongos.conf, mongos.conf, /etc]
+      - [mongodb/init-users.sh.tpl, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
+      - [mongodb/base-functions.sh, base-functions.sh, /usr/share/cont-layer/mongodb/common/]
+    files:
+      - [mongodb/README.md.tpl, README.md]
+    run:
+      - mkdir -p /var/lib/mongodb/data /var/run/mongodb
+      - chown -R mongodb:mongodb /var/lib/mongodb/ /var/run/mongodb /etc/mongod.conf /etc/mongos.conf
+      - restorecon -R /var/lib/mongodb/
+    volume: /var/lib/mongodb/data
+    user: mongodb
+    cmd: ["cont-mongod"]
   httpd24:
     install: httpd24
     expose: [80, 443]
@@ -115,6 +179,19 @@ containers:
   postgresql92:
     install: postgresql92
     expose: [5432]
+    envs:
+      - "HOME            /var/lib/pgsql"
+    add:
+      - [common/cont-lib/root/.bashrc, .bashrc, /var/lib/pgsql/]
+      - [postgresql/usr, usr, /]
+      - [postgresql/var, var, /]
+      - [postgresql/cont-setup.sh, cont-setup, /usr/libexec/]
+    run:
+      - /usr/libexec/cont-setup
+    volume: ["/var/lib/pgsql/data"]
+    user: postgres
+    entrypoint: ["/usr/bin/cont-entry"]
+    cmd: ["cont-postgresql-cmd"]
   python27:
     install: python27
   python33:
@@ -151,12 +228,61 @@ containers:
   rh-mariadb100:
     install: rh-mariadb100
     expose: [3306]
+    envs:
+      - "HOME            /var/lib/mysql"
+    add:
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
+      - [mysql-common/usr, usr, /]
+      - [mysql-common/my.cnf.tpl, my.cnf, "/etc/opt/rh/{{ collection }}/"]
+    files:
+      - [mysql-common/README.md.tpl, README.md]
+    run:
+      - /usr/libexec/cont-setup
+    volume: ["/var/lib/mysql/data"]
+    user: mysql
+    cmd: ["cont-mysqld"]
+    logfile: /var/log/mariadb/mariadb.log
+    pidfile: /var/run/mariadb/mariadb.pid
   rh-mongodb26:
-    install: rh-mongodb26
+    install: rh-mongodb26 rh-mongodb26-mongodb
     expose: [27017, 28017]
+    envs:
+      - "HOME            /var/lib/mongodb"
+    add:
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
+      - [mongodb/cont-mongod.sh, cont-mongod, /usr/bin/]
+      - [mongodb/cont-mongos.sh, cont-mongos, /usr/bin/]
+      - [mongodb/mongod.conf, mongod.conf, /etc]
+      - [mongodb/mongos.conf, mongos.conf, /etc]
+      - [mongodb/init-users.sh.tpl, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
+      - [mongodb/base-functions.sh, base-functions.sh, /usr/share/cont-layer/mongodb/common/]
+    files:
+      - [mongodb/README.md.tpl, README.md]
+    run:
+      - mkdir -p /var/lib/mongodb/data /var/run/mongodb
+      - chown -R mongodb:mongodb /var/lib/mongodb/ /var/run/mongodb /etc/mongod.conf /etc/mongos.conf
+      - restorecon -R /var/lib/mongodb/
+    volume: /var/lib/mongodb/data
+    user: mongodb
+    cmd: ["cont-mongod"]
   rh-mysql56:
     install: rh-mysql56
     expose: [3306]
+    envs:
+      - "HOME            /var/lib/mysql"
+    add:
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
+      - [mysql-common/usr, usr, /]
+      - [mysql-common/my.cnf.tpl, my.cnf, "/etc/opt/rh/{{ collection }}/"]
+    files:
+      - [mysql-common/README.md.tpl, README.md]
+    run:
+      - /usr/libexec/cont-setup
+    volume: ["/var/lib/mysql/data"]
+    user: mysql
+    cmd: ["cont-mysqld"]
+    logfile: /var/log/mysql/mysqld.log
+    pidfile: /var/run/mysql/mysqld.pid
   rh-passenger40:
     install: rh-passenger40 rh-passenger40-ruby22
     enable: [rh-passenger40, rh-ruby22]
@@ -165,7 +291,8 @@ containers:
   rh-php56:
     install: rh-php56
   rh-python34:
-    install: rh-python34
+    install: rh-python34 rh-python34-python-devel rh-python34-python-setuptools
+    expose: [8000]
   rh-ror41:
     install: rh-ror41
   rh-ruby22:
