@@ -190,7 +190,7 @@ containers:
       - /usr/libexec/cont-setup
     volume: ["/var/lib/pgsql/data"]
     user: postgres
-    entrypoint: ["/usr/bin/cont-entry"]
+    entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["cont-postgresql-cmd"]
   python27:
     install: python27
