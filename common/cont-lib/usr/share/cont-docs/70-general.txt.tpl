@@ -1,7 +1,7 @@
 General container help
 ----------------------
 
-Run `docker run {% if privileged %} --privileged {% endif -%} {{ container }}{% if 'container-usage' not in cmd %} container-usage{% endif %}` to get this help.
+Run `docker run {% if privileged %} --privileged {% endif -%} {{ container }} container-usage` to get this help.
 
 Run `docker run -ti {% if privileged %} --privileged {% endif -%} {{ container }} bash` to obtain interactive shell.
 
