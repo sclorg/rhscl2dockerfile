@@ -18,5 +18,5 @@ To build the Dockerfile, run:
 {% include f %}
 {% endfor -%}
 
-{% include 'common/cont-lib/usr/share/cont-docs/70-general.txt' %}
+{% include 'common/cont-lib/usr/share/cont-docs/70-general.txt.tpl' %}
 
