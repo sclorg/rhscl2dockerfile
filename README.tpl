@@ -1,13 +1,21 @@
 Software Collection {{ container }} Dockerfile
 {{ '=' * (container|length + 31) }}
 
-Build
------
+How to build this Dockerfile
+----------------------------
 
 Building this Dockerfile requires a Red Hat Enterprise Linux 7 host
 system with Software Collections entitlements available.
 
-Run
----
+To build the Dockerfile, run the following command in this directory:
 
-docker run -t -i {% if privileged %} --privileged {% endif -%} {{ container }} /bin/bash -l
+```
+# docker build .
+```
+
+{% for f in readme %}
+{% include f %}
+{% endfor -%}
+
+{% include 'common/cont-lib/usr/share/cont-docs/70-general.txt' %}
+

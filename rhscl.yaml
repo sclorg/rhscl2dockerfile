@@ -80,6 +80,7 @@ templates:
 # be defined if not the name used here.
 containers:
   mariadb55:
+    name: MariaDB 5.5
     install: mariadb55 hostname
     expose: [3306]
     envs:
