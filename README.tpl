@@ -7,10 +7,11 @@ How to build this Dockerfile
 Building this Dockerfile requires a Red Hat Enterprise Linux 7 host
 system with Software Collections entitlements available.
 
-To build the Dockerfile, run the following command in this directory:
+To build the Dockerfile, run:
 
 ```
-# docker build .
+# cd {{ collection }}
+# docker build -t={{ collection }} .
 ```
 
 {% for f in readme %}
