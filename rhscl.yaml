@@ -93,12 +93,15 @@ containers:
       - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
+    readme:
+      - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
     user: mysql
     cmd: ["cont-mysqld"]
     logfile: /var/log/mariadb/mariadb.log
     pidfile: /var/run/mariadb/mariadb.pid
   mysql55:
+    name: MySQL 5.5
     install: mysql55 hostname
     expose: [3306]
     envs:
@@ -111,6 +114,8 @@ containers:
       - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
+    readme:
+      - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
     user: mysql
     cmd: ["cont-mysqld"]
@@ -229,6 +234,7 @@ containers:
   rh-java-common:
     install: rh-java-common
   rh-mariadb100:
+    name: MariaDB 10.0
     install: rh-mariadb100
     expose: [3306]
     envs:
@@ -241,6 +247,8 @@ containers:
       - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
+    readme:
+      - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
     user: mysql
     cmd: ["cont-mysqld"]
@@ -269,6 +277,7 @@ containers:
     user: mongodb
     cmd: ["cont-mongod"]
   rh-mysql56:
+    name: MySQL 5.6
     install: rh-mysql56
     expose: [3306]
     envs:
@@ -281,6 +290,8 @@ containers:
       - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
+    readme:
+      - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
     user: mysql
     cmd: ["cont-mysqld"]
