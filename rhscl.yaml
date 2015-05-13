@@ -60,6 +60,7 @@ templates:
       - [README.tpl, README.md]
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
+    cmd: ["container-usage"]
 
   rhel7:
     add:
@@ -72,12 +73,14 @@ templates:
       - [README.tpl, README.md]
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
+    cmd: ["container-usage"]
 
 # For each container to define, define packages parameter to yum
 # install plus list of ports to expose.  The SCL collection name must
 # be defined if not the name used here.
 containers:
   mariadb55:
+    name: MariaDB 5.5
     install: mariadb55 hostname
     expose: [3306]
     envs:
@@ -90,12 +93,15 @@ containers:
       - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
+    readme:
+      - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
     user: mysql
     cmd: ["cont-mysqld"]
     logfile: /var/log/mariadb/mariadb.log
     pidfile: /var/run/mariadb/mariadb.pid
   mysql55:
+    name: MySQL 5.5
     install: mysql55 hostname
     expose: [3306]
     envs:
@@ -108,6 +114,8 @@ containers:
       - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
+    readme:
+      - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
     user: mysql
     cmd: ["cont-mysqld"]
@@ -190,7 +198,7 @@ containers:
       - /usr/libexec/cont-setup
     volume: ["/var/lib/pgsql/data"]
     user: postgres
-    entrypoint: ["/usr/bin/cont-entry"]
+    entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["cont-postgresql-cmd"]
   python27:
     install: python27
@@ -211,6 +219,10 @@ containers:
     install: devtoolset-3-systemtap
     expose: [5353]
     privileged: 1
+    files:
+      - [ systemtap.txt.tpl, usr/share/cont-docs/systemtap.txt ]
+    readme:
+      - systemtap.txt.tpl
   devtoolset-3-dyninst:
     collection: devtoolset-3
     install: devtoolset-3-dyninst
@@ -226,6 +238,7 @@ containers:
   rh-java-common:
     install: rh-java-common
   rh-mariadb100:
+    name: MariaDB 10.0
     install: rh-mariadb100
     expose: [3306]
     envs:
@@ -238,6 +251,8 @@ containers:
       - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
+    readme:
+      - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
     user: mysql
     cmd: ["cont-mysqld"]
@@ -266,6 +281,7 @@ containers:
     user: mongodb
     cmd: ["cont-mongod"]
   rh-mysql56:
+    name: MySQL 5.6
     install: rh-mysql56
     expose: [3306]
     envs:
@@ -278,6 +294,8 @@ containers:
       - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
+    readme:
+      - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
     user: mysql
     cmd: ["cont-mysqld"]
