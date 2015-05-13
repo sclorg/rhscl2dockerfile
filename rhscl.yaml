@@ -219,6 +219,10 @@ containers:
     install: devtoolset-3-systemtap
     expose: [5353]
     privileged: 1
+    files:
+      - [ systemtap.txt.tpl, usr/share/cont-docs/systemtap.txt ]
+    readme:
+      - systemtap.txt.tpl
   devtoolset-3-dyninst:
     collection: devtoolset-3
     install: devtoolset-3-dyninst
