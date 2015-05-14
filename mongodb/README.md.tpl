@@ -24,7 +24,7 @@ Usage
 Without specifying any commands on the command line, the mongod daemon is run
 
 ```
-docker run -d --name mongodb_database -p 27017:27017 THIS_IMAGE
+docker run -d -p 27017:27017 THIS_IMAGE
 ```
 
 It is recommended to use run the container with mounted data directory everytime.
@@ -32,13 +32,13 @@ This example shows how to run the container with `/host/data` directory mounted
 and so the database will store data into this directory on host:
 
 ```
-docker run -d --name mongodb_database -v /host/data:/var/lib/mongodb/data THIS_IMAGE
+docker run -d -v /host/data:/var/lib/mongodb/data THIS_IMAGE
 ```
 
 To pass arguments that are used for initializing the database if it is not yet initialized, define them as environment variables
 
 ```
-docker run -d --name mongodb_database -e MONGODB_USER=user -e MONGODB_PASSWORD=pass -e MONGODB_DATABASE=db -e MONGODB_ADMIN_PASSWORD=adminpass -p 27017:27017 THIS_IMAGE
+docker run -d  -e MONGODB_USER=user -e MONGODB_PASSWORD=pass -e MONGODB_DATABASE=db -e MONGODB_ADMIN_PASSWORD=adminpass -p 27017:27017 THIS_IMAGE
 ```
 
 To run Bash in the built Docker image, run

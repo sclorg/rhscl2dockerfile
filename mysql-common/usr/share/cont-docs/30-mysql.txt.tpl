@@ -38,7 +38,7 @@ To just run the dameon and not store the database in a host directory,
 you need to execute the following command:
 
 ```
-# docker run --name={{ collection }} -d -p 3306:3306 THIS_IMAGE
+# docker run -d -p 3306:3306 THIS_IMAGE
 ```
 
 This will run the daemon in default configuration and port 3306 will be
@@ -49,16 +49,16 @@ This example shows how to run the container with `/host/data` directory mounted
 and so the database will store data into this directory on host:
 
 ```
-docker run -d --name mysql_database -v /host/data:/var/lib/mysql/data THIS_IMAGE
+docker run -d -v /host/data:/var/lib/mysql/data THIS_IMAGE
 ```
 
-This will create a container named `mysql_database` running {{ name }} daemon
+This will create a container running {{ name }} daemon
 and storing data into `/host/data` on the host.
 
 For debugging purposes or just connecting to the running container, run
-`docker exec -ti mysql_database container-entrypoint` in a separate terminal.
+`docker exec -ti CONTAINERID container-entrypoint` in a separate terminal.
 
-You can stop the detached container by running `docker stop mysql_database`.
+You can stop the detached container by running `docker stop CONTAINERID`.
 
 
 Database initialization
@@ -73,10 +73,10 @@ To pass arguments that are used for initializing the database if it is not yet
 initialized, define them as environment variables
 
 ```
-docker run -d --name mysql_database -e MYSQL_USER=user -e MYSQL_PASSWORD=pass -e MYSQL_DATABASE=db THIS_IMAGE
+docker run -d -e MYSQL_USER=user -e MYSQL_PASSWORD=pass -e MYSQL_DATABASE=db THIS_IMAGE
 ```
 
-This will create a container named `mysql_database` running {{ name }} with database
+This will create a container running {{ name }} with database
 `db` and user with credentials `user:pass` that has access to the database `db`.
 
 
