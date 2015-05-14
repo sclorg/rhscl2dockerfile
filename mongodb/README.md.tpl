@@ -1,27 +1,30 @@
-Software Collection {{ container }} Dockerfile
-{{ '=' * (container|length + 31) }}
+{{ name }} Docker Image based on {{ collection }} Software Collection
+{{ '=' * (collection|length + 43 + name|length) }}
 
+Mongo (from "humongous") is a high-performance, open source, schema-free
+document-oriented database. MongoDB is written in C++ and offers the following
+features:
+* Collection oriented storage: easy storage of object/JSON-style data
+* Dynamic queries
+* Full index support, including on inner objects and embedded arrays
+* Query profiling
+* Replication and fail-over support
+* Efficient storage of binary data including large objects (e.g. photos
+  and videos)
+* Auto-sharding for cloud-level scalability (currently in early alpha)
+* Commercial Support Available
 
-Build
+A key goal of MongoDB is to bridge the gap between key/value stores (which are
+fast and highly scalable) and traditional RDBMS systems (which are deep in
+functionality).
+
+Usage
 -----
-
-Building this Dockerfile requires a Red Hat Enterprise Linux 7 host
-system with Software Collections entitlements available.
-
-To build the Dockerfile run the following command in this directory:
-
-```
-docker build .
-```
-
-
-Run
----
 
 Without specifying any commands on the command line, the mongod daemon is run
 
 ```
-docker run -d --name mongodb_database -p 27017:27017 {{ container }}
+docker run -d -p 27017:27017 THIS_IMAGE
 ```
 
 It is recommended to use run the container with mounted data directory everytime.
@@ -29,25 +32,25 @@ This example shows how to run the container with `/host/data` directory mounted
 and so the database will store data into this directory on host:
 
 ```
-docker run -d --name mongodb_database -v /host/data:/var/lib/mongodb/data {{ container }}
+docker run -d -v /host/data:/var/lib/mongodb/data THIS_IMAGE
 ```
 
 To pass arguments that are used for initializing the database if it is not yet initialized, define them as environment variables
 
 ```
-docker run -d --name mongodb_database -e MMONGODB_USER=user -e MONGODB_PASSWORD=pass -e MONGODB_DATABASE=db -e MONGODB_ADMIN_PASSWORD=adminpass -p 27017:27017 {{ container }}
+docker run -d  -e MONGODB_USER=user -e MONGODB_PASSWORD=pass -e MONGODB_DATABASE=db -e MONGODB_ADMIN_PASSWORD=adminpass -p 27017:27017 THIS_IMAGE
 ```
 
 To run Bash in the built Docker image, run
 
 ```
-docker run -t -i {% if privileged %} --privileged {% endif -%} {{ container }} /bin/bash
+docker run -t -i THIS_IMAGE /bin/bash
 ```
 
 To connect to running container, run
 
 ```
-docker exec -t -i {{ container }} bash
+docker exec -t -i mongodb_database bash
 ```
 
 Authentication
