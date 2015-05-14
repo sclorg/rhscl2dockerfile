@@ -89,8 +89,6 @@ containers:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
       - [mysql-common/my.cnf.tpl, my.cnf, "/opt/rh/{{ collection }}/root/etc"]
-    files:
-      - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
     readme:
@@ -110,8 +108,6 @@ containers:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
       - [mysql-common/my.cnf.tpl, my.cnf, "/opt/rh/{{ collection }}/root/etc"]
-    files:
-      - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
     readme:
@@ -122,6 +118,7 @@ containers:
     logfile: /var/log/mysql/mysqld.log
     pidfile: /var/run/mysql/mysqld.pid
   mongodb24:
+    name: MongoDB 2.4
     install: mongodb24 mongodb24-mongodb
     expose: [27017, 28017]
     envs:
@@ -135,11 +132,13 @@ containers:
       - [mongodb/init-users.sh.tpl, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
       - [mongodb/base-functions.sh, base-functions.sh, /usr/share/cont-layer/mongodb/common/]
     files:
-      - [mongodb/README.md.tpl, README.md]
+      - [mongodb/README.md.tpl, usr/share/cont-docs/10-mongodb.txt]
     run:
       - mkdir -p /var/lib/mongodb/data /var/run/mongodb
       - chown -R mongodb:mongodb /var/lib/mongodb/ /var/run/mongodb /etc/mongod.conf /etc/mongos.conf
       - restorecon -R /var/lib/mongodb/
+    readme:
+      - mongodb/README.md.tpl
     volume: /var/lib/mongodb/data
     user: mongodb
     cmd: ["cont-mongod"]
@@ -247,8 +246,6 @@ containers:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
       - [mysql-common/my.cnf.tpl, my.cnf, "/etc/opt/rh/{{ collection }}/"]
-    files:
-      - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
     readme:
@@ -259,6 +256,7 @@ containers:
     logfile: /var/log/mariadb/mariadb.log
     pidfile: /var/run/mariadb/mariadb.pid
   rh-mongodb26:
+    name: MongoDB 2.6
     install: rh-mongodb26 rh-mongodb26-mongodb
     expose: [27017, 28017]
     envs:
@@ -272,11 +270,13 @@ containers:
       - [mongodb/init-users.sh.tpl, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
       - [mongodb/base-functions.sh, base-functions.sh, /usr/share/cont-layer/mongodb/common/]
     files:
-      - [mongodb/README.md.tpl, README.md]
+      - [mongodb/README.md.tpl, usr/share/cont-docs/10-mongodb.txt]
     run:
       - mkdir -p /var/lib/mongodb/data /var/run/mongodb
       - chown -R mongodb:mongodb /var/lib/mongodb/ /var/run/mongodb /etc/mongod.conf /etc/mongos.conf
       - restorecon -R /var/lib/mongodb/
+    readme:
+      - mongodb/README.md.tpl
     volume: /var/lib/mongodb/data
     user: mongodb
     cmd: ["cont-mongod"]
@@ -290,8 +290,6 @@ containers:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
       - [mysql-common/my.cnf.tpl, my.cnf, "/etc/opt/rh/{{ collection }}/"]
-    files:
-      - [mysql-common/README.md.tpl, README.md]
     run:
       - /usr/libexec/cont-setup
     readme:
