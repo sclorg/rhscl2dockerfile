@@ -287,7 +287,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 * Config file: `/etc/my.cnf`, `/etc/my.cnf.d`
   * will be writable by `mysql` user, so they may be rewritten by process running under `mysql` user
 * Deamon runs as `mysql` user (`USER` directive)
-* Log file directory (specified as VOLUME): `/var/log/<package>`, e.g. `/var/log/mariadb`
+* Log file directory (specified as VOLUME): `/var/log/<package>`, e.g. `/var/log/mariadb` or stdout (TODO: github issue #13)
 * Socket file: not necessary, if proofed otherwise, `/var/lib/mysql/mysql.sock` will be used
 * Environment variables:
   * `MYSQL_USER` - Database user name
@@ -309,7 +309,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
   * `$PGDATA/postgresql.conf`
   * `$PGDATA/pg_hba.conf`
 * Daemon runs as `postgres` (`USER` directive)
-* Startup log at `/var/lib/pgsql/pgstartup.log`
+* Startup log at `/var/lib/pgsql/pgstartup.log` or stdout (TODO: github issue #13)
 * Log directory: `$PGDATA/pg_log`
 * `pg_hba.conf` allows to log in from addresses `0.0.0.0` and `::/0` using `md5`
 * Environment variables:
@@ -332,7 +332,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
   * `/etc/mongos.conf`
   * those will be writable by `mongodb` user, so they may be rewritten by process running under `mongodb` user
 * Daemon runs as `mongodb` (USER directive)
-* Log file directory (specified as VOLUME): `/var/log/mongodb/`
+* Log file directory (specified as VOLUME): `/var/log/mongodb/` or stdout (TODO: github issue #13)
 * Environment variables:
   * `MONGODB_USER`
   * `MONGODB_PASSWORD`
@@ -343,10 +343,10 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 
 ### httpd dockerfile:
 
-* `EXPOSE` 8080, 8443
+* `EXPOSE` 8080, 8443 (TODO: github issue #14)
 * Config dir: `/etc/httpd`
-* Daemon runs as `apache` (USER directive)
-* Log file: `/var/log/httpd/`
+* Daemon runs as `apache` (USER directive) or root (TODO: github issue #14)
+* Log file: `/var/log/httpd/` or stdout (TODO: github issue #13)
 
 
 ### httpd-php dockerfile:
