@@ -61,6 +61,33 @@ templates:
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
     cmd: ["container-usage"]
+    devel_libs: |
+      \
+      autoconf \
+      automake \
+      bsdtar \
+      curl-devel \
+      epel-release \
+      gcc-c++ \
+      gdb \
+      gettext \
+      libxml2-devel \
+      libxslt-devel \
+      lsof \
+      make \
+      mysql-devel \
+      mysql-libs \
+      openssl-devel \
+      postgresql-devel \
+      procps-ng \
+      scl-utils \
+      sqlite-devel \
+      tar \
+      unzip \
+      wget \
+      which \
+      yum-utils \
+      zlib-devel \
 
   rhel7:
     add:
@@ -74,6 +101,33 @@ templates:
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
     cmd: ["container-usage"]
+    devel_libs: |
+      \
+      autoconf \
+      automake \
+      bsdtar \
+      curl-devel \
+      epel-release \
+      gcc-c++ \
+      gdb \
+      gettext \
+      libxml2-devel \
+      libxslt-devel \
+      lsof \
+      make \
+      mysql-devel \
+      mysql-libs \
+      openssl-devel \
+      postgresql-devel \
+      procps-ng \
+      scl-utils \
+      sqlite-devel \
+      tar \
+      unzip \
+      wget \
+      which \
+      yum-utils \
+      zlib-devel \
 
 # For each container to define, define packages parameter to yum
 # install plus list of ports to expose.  The SCL collection name must
@@ -147,42 +201,42 @@ containers:
     expose: [80, 443]
   httpd24-php55:
     collection: httpd24
-    install: httpd24 php55 php55-php
+    install: httpd24 php55 php55-php @devel_libs
     expose: [80, 443]
   httpd24-python27:
     collection: httpd24
-    install: httpd24 python27
+    install: httpd24 python27 @devel_libs
     expose: [80, 443]
   httpd24-python33:
     collection: httpd24
-    install: httpd24 python33 python33-mod_wsgi
+    install: httpd24 python33 python33-mod_wsgi @devel_libs
     expose: [80, 443]
   perl516:
-    install: perl516
+    install: perl516 @devel_libs
   httpd24-perl516:
     collection: httpd24
-    install: httpd24 perl516 perl516-mod_perl
+    install: httpd24 perl516 perl516-mod_perl @devel_libs
     expose: [80, 443]
   nginx14:
-    install: nginx14
+    install: nginx14 @devel_libs
     expose: [80, 443]
   nginx16:
-    install: nginx16
+    install: nginx16 @devel_libs
     expose: [80, 443]
   nodejs010:
-    install: nodejs010
+    install: nodejs010 @devel_libs
     expose: [80]
   php54:
-    install: php54
+    install: php54 @devel_libs
   php55:
-    install: php55
+    install: php55 @devel_libs
   ruby193:
-    install: ruby193
+    install: ruby193 @devel_libs
   ruby200:
-    install: ruby200
+    install: ruby200 @devel_libs
   ruby200-ror40:
     collection: ror40
-    install: ruby200 ror40
+    install: ruby200 ror40 @devel_libs
   postgresql92:
     install: postgresql92
     expose: [5432]
@@ -200,11 +254,11 @@ containers:
     entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["cont-postgresql-cmd"]
   python27:
-    install: python27
+    install: python27 @devel_libs
   python33:
-    install: python33
+    install: python33 @devel_libs
   ror40:
-    install: ror40
+    install: ror40 @devel_libs
   devtoolset-3:
     install: devtoolset-3
   devtoolset-3-toolchain:
@@ -303,16 +357,16 @@ containers:
     install: rh-passenger40 rh-passenger40-ruby22
     enable: [rh-passenger40, rh-ruby22]
   rh-perl520:
-    install: rh-perl520
+    install: rh-perl520 @devel_libs
   rh-php56:
-    install: rh-php56
+    install: rh-php56 @devel_libs
   rh-python34:
-    install: rh-python34 rh-python34-python-devel rh-python34-python-setuptools
+    install: rh-python34 rh-python34-python-devel rh-python34-python-setuptools @devel_libs
     expose: [8000]
   rh-ror41:
-    install: rh-ror41
+    install: rh-ror41 @devel_libs
   rh-ruby22:
-    install: rh-ruby22
+    install: rh-ruby22 @devel_libs
   rh-postgresql94:
     install: rh-postgresql94
     expose: [5432]
