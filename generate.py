@@ -6,15 +6,15 @@ import os
 import sys
 import shutil
 import argparse
-
+import copy
 
 class CollectionGenerator:
     def __init__(self, gen, cvars, coll, tname, tvars):
-        self.cvars = cvars
+        self.cvars = copy.deepcopy(cvars)
         self.gen = gen
         self.collection = coll
         self.tname = tname
-        self.tvars = tvars
+        self.tvars = copy.deepcopy(tvars)
 
     def copy_render(self, src, dst, allways_render=True):
         """
