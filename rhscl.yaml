@@ -68,6 +68,7 @@ templates:
       bsdtar \
       curl-devel \
       epel-release \
+      findutils \
       gcc-c++ \
       gdb \
       gettext \
