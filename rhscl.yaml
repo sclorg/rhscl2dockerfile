@@ -218,10 +218,10 @@ containers:
     install: httpd24 perl516 perl516-mod_perl @devel_libs
     expose: [80, 443]
   nginx14:
-    install: nginx14 @devel_libs
+    install: nginx14
     expose: [80, 443]
   nginx16:
-    install: nginx16 @devel_libs
+    install: nginx16
     expose: [80, 443]
   nodejs010:
     install: nodejs010 @devel_libs
