@@ -181,14 +181,14 @@ If there is a port that is usually used for development or production, this port
 
 
 ### ruby dockerfile:
-* collections: `ruby22`
+* collections: `rh-ruby22`
 * extra packages: `ruby-devel`  `rubygem-bundler`
 * `EXPOSE` 8080
 
 
 ### rails dockerfile:
-* collections: `ror41` `ruby22` `nodejs010`
-* extra packages: just what ror41 installs by default
+* collections: `rh-ror41` `rh-ruby22` `nodejs010`
+* extra packages: just what rh-ror41 installs by default
 * `EXPOSE` 8080
 
 
@@ -365,5 +365,3 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 
 * Includes all from httpd dockerfile above
 * Packages installed: `<perl_collection>`, `<perl_collection>-mod_perl`
-
-
