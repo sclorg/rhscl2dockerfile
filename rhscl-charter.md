@@ -209,7 +209,7 @@ Daemon is listening on 0.0.0.0 by default.
 
 Data directory (if any) that is expected to be mounted shouldn't be home directory of user, there may be more stuff that we don't want to mount, so in some cases we use data/ subdirectory for data themselves (and VOLUME)
 
-Daemon log errors to `stdout` or `stderr`, so the logs are shown in the `docker log` output. This will probably change as soon as we can use `systemd` in the container and proper `journald` logging.
+Daemon log errors to `stdout` or `stderr`, so the logs are shown in the `docker log` output.
 
 ### Extending the docker images:
 
