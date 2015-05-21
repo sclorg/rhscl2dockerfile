@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Get prefix rather than hard-code it
+# This function returns all config files that daemon uses and their path
+# includes /opt. It is used to get correct path to the config file.
 mysql_get_config_files_scl() {
     scl enable {{ collection }} -- my_print_defaults --help --verbose | \
         grep --after=1 '^Default options' | \
@@ -8,13 +9,15 @@ mysql_get_config_files_scl() {
         grep -o '[^ ]*opt[^ ]*my.cnf'
 }
 
+# This function picks the main config file that deamon uses and we ship in rpm
 mysql_get_correct_config() {
     # we use the same config in non-SCL packages, not necessary to guess
     [ -z "{{ collection }}" ] && echo -n "/etc/my.cnf" && return
 
+    # from all config files read by daemon, pick the first that exists
     for f in `mysql_get_config_files_scl` ; do
-        echo "$f"
-    done | grep -v mysql/my.cnf | head -n 1
+        [ -f "$f" ] && echo "$f"
+    done | head -n 1
 }
 
 export MYSQL_CONFIG_FILE=$(mysql_get_correct_config)
