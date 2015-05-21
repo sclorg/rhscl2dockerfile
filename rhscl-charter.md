@@ -209,6 +209,8 @@ Daemon is listening on 0.0.0.0 by default.
 
 Data directory (if any) that is expected to be mounted shouldn't be home directory of user, there may be more stuff that we don't want to mount, so in some cases we use data/ subdirectory for data themselves (and VOLUME)
 
+Daemon log errors to `stdout` or `stderr`, so the logs are shown in the `docker log` output. This will probably change as soon as we can use `systemd` in the container and proper `journald` logging.
+
 ### Extending the docker images:
 
 In order to allow just extending the docker image easily without rewriting scripts from scratch, the scripts should include hook scripts in places it makes sense from directory that may be mounted or extended in another layer, something similar to the following (for databases the hooks may be "preinit", "postinit"):
@@ -287,7 +289,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 * Config file: `/etc/my.cnf`, `/etc/my.cnf.d`
   * will be writable by `mysql` user, so they may be rewritten by process running under `mysql` user
 * Deamon runs as `mysql` user (`USER` directive)
-* Log file directory (specified as VOLUME): `/var/log/<package>`, e.g. `/var/log/mariadb` or stdout (TODO: github issue #13)
+* Log file directory (specified as VOLUME): `/var/log/<package>`, e.g. `/var/log/mariadb` but by default the daemon put logs into `stdout` or `stderr`
 * Socket file: not necessary, if proofed otherwise, `/var/lib/mysql/mysql.sock` will be used
 * Environment variables:
   * `MYSQL_USER` - Database user name
@@ -309,7 +311,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
   * `$PGDATA/postgresql.conf`
   * `$PGDATA/pg_hba.conf`
 * Daemon runs as `postgres` (`USER` directive)
-* Startup log at `/var/lib/pgsql/pgstartup.log` or stdout (TODO: github issue #13)
+* Startup log at `/var/lib/pgsql/pgstartup.log`
 * Log directory: `$PGDATA/pg_log`
 * `pg_hba.conf` allows to log in from addresses `0.0.0.0` and `::/0` using `md5`
 * Environment variables:
@@ -332,7 +334,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
   * `/etc/mongos.conf`
   * those will be writable by `mongodb` user, so they may be rewritten by process running under `mongodb` user
 * Daemon runs as `mongodb` (USER directive)
-* Log file directory (specified as VOLUME): `/var/log/mongodb/` or stdout (TODO: github issue #13)
+* Log file directory (specified as VOLUME): `/var/log/mongodb/` but by default the daemon put logs into `stdout` or `stderr`
 * Environment variables:
   * `MONGODB_USER`
   * `MONGODB_PASSWORD`
@@ -346,7 +348,7 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
 * `EXPOSE` 8080, 8443 (TODO: github issue #14)
 * Config dir: `/etc/httpd`
 * Daemon runs as `apache` (USER directive) or root (TODO: github issue #14)
-* Log file: `/var/log/httpd/` or stdout (TODO: github issue #13)
+* Log file: `/var/log/httpd/` but by default the daemon put logs into `stdout` or `stderr`
 
 
 ### httpd-php dockerfile:

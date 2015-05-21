@@ -5,7 +5,7 @@ mysql_get_config_files_scl() {
     scl enable {{ collection }} -- my_print_defaults --help --verbose | \
         grep --after=1 '^Default options' | \
         tail -n 1 | \
-        grep -o '.*opt[^ ]*my.cnf'
+        grep -o '[^ ]*opt[^ ]*my.cnf'
 }
 
 mysql_get_correct_config() {
@@ -14,10 +14,12 @@ mysql_get_correct_config() {
 
     for f in `mysql_get_config_files_scl` ; do
         echo "$f"
-    done | grep -v mysql/my.cnf
+    done | grep -v mysql/my.cnf | head -n 1
 }
 
 export MYSQL_CONFIG_FILE=$(mysql_get_correct_config)
+
+[ -z "$MYSQL_CONFIG_FILE" ] && echo "MYSQL_CONFIG_FILE is empty" && exit 1
 
 unset -f mysql_get_correct_config mysql_get_config_files_scl
 
@@ -27,6 +29,9 @@ if [ "$MYSQL_CONFIG_FILE" != "/etc/my.cnf" ] ; then
     ln -s ${MYSQL_CONFIG_FILE} /etc/my.cnf
     ln -s ${MYSQL_CONFIG_FILE}.d /etc/my.cnf.d
 fi
+
+# comment out log-error from the config, by default the daemon should log to stderr
+sed -ie 's/^\([^#]*log[-_]error=.*\)$/# logging to stderr \n# \1/g' ${MYSQL_CONFIG_FILE}
 
 # we may add options during service init, we need to have this dir writable
 chown -R mysql:mysql ${MYSQL_CONFIG_FILE}.d
