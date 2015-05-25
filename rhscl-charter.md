@@ -298,6 +298,12 @@ set | grep -e '^MYSQL_CONFIG_'|sed -e 's/^MYSQL_CONFIG_//' >>/etc/my.cnf.d/gener
   * `MYSQL_ROOT_PASSWORD` - Password for the 'root' MySQL account
   * either root_password or user+password+database may be set if running with empty datadir, combination of both is also valid
   * `MYSQL_DISABLE_CREATE_DB` -- when set, it disables initializing DB and no other variables from the set above is required
+* Configuration variables:
+  * MYSQL_LOWER_CASE_TABLE_NAMES=${MYSQL_LOWER_CASE_TABLE_NAMES:-0}
+  * MYSQL_MAX_CONNECTIONS=${MYSQL_MAX_CONNECTIONS:-151}
+  * MYSQL_FT_MIN_WORD_LEN=${MYSQL_FT_MIN_WORD_LEN:-4}
+  * MYSQL_FT_MAX_WORD_LEN=${MYSQL_FT_MAX_WORD_LEN:-20}
+  * MYSQL_AIO=${MYSQL_AIO:-1}
 
 
 ### postgresql dockerfile:
