@@ -257,7 +257,7 @@ containers:
   python27:
     install: python27 python27-python-pip python27-python-wheel python27-python-setuptools @devel_libs
   python33:
-      install: python33 python33-python-pip python33-python-setuptools @devel_libs
+    install: python33 python33-python-pip python33-python-setuptools @devel_libs
   ror40:
     install: ror40 @devel_libs
   devtoolset-3:
