@@ -206,11 +206,11 @@ containers:
     expose: [80, 443]
   httpd24-python27:
     collection: httpd24
-    install: httpd24 python27 @devel_libs
+    install: httpd24 python27 python27-python-pip python27-python-wheel python27-python-setuptools @devel_libs
     expose: [80, 443]
   httpd24-python33:
     collection: httpd24
-    install: httpd24 python33 python33-mod_wsgi @devel_libs
+    install: httpd24 python33 python33-python-pip python33-python-setuptools python33-mod_wsgi @devel_libs
     expose: [80, 443]
   perl516:
     install: perl516 @devel_libs
@@ -255,9 +255,9 @@ containers:
     entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["cont-postgresql-cmd"]
   python27:
-    install: python27 @devel_libs
+    install: python27 python27-python-pip python27-python-wheel python27-python-setuptools @devel_libs
   python33:
-    install: python33 @devel_libs
+      install: python33 python33-python-pip python33-python-setuptools @devel_libs
   ror40:
     install: ror40 @devel_libs
   devtoolset-3:
@@ -362,7 +362,7 @@ containers:
   rh-php56:
     install: rh-php56 @devel_libs
   rh-python34:
-    install: rh-python34 rh-python34-python-devel rh-python34-python-setuptools @devel_libs
+    install: rh-python34 @devel_libs
     expose: [8000]
   rh-ror41:
     install: rh-ror41 @devel_libs
