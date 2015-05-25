@@ -184,8 +184,11 @@ containers:
       - [mongodb/cont-mongos.sh, cont-mongos, /usr/bin/]
       - [mongodb/mongod.conf, mongod.conf, /etc]
       - [mongodb/mongos.conf, mongos.conf, /etc]
-      - [mongodb/init-users.sh.tpl, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
       - [mongodb/base-functions.sh, base-functions.sh, /usr/share/cont-layer/mongodb/common/]
+      - [mongodb/20-openshift-preinit.sh, 20-openshift-pre.sh, /usr/share/cont-layer/mongodb/pre-init.d/]
+      - [mongodb/50-init-users.sh.tpl, 50-init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
+      - [mongodb/80-openshift.sh, 80-openshift.sh, /usr/share/cont-layer/mongodb/init.d/]
+      - [mongodb/80-init-users-postinit.sh, 80-init-users-post.sh, /usr/share/cont-layer/mongodb/post-init.d/]
     files:
       - [mongodb/README.md.tpl, usr/share/cont-docs/10-mongodb.txt]
     run:
@@ -330,8 +333,11 @@ containers:
       - [mongodb/cont-mongos.sh, cont-mongos, /usr/bin/]
       - [mongodb/mongod.conf, mongod.conf, /etc]
       - [mongodb/mongos.conf, mongos.conf, /etc]
-      - [mongodb/init-users.sh.tpl, init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
       - [mongodb/base-functions.sh, base-functions.sh, /usr/share/cont-layer/mongodb/common/]
+      - [mongodb/20-openshift-preinit.sh, 20-openshift-pre.sh, /usr/share/cont-layer/mongodb/pre-init.d/]
+      - [mongodb/50-init-users.sh.tpl, 50-init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
+      - [mongodb/80-openshift.sh, 80-openshift.sh, /usr/share/cont-layer/mongodb/init.d/]
+      - [mongodb/80-init-users-postinit.sh, 80-init-users-post.sh, /usr/share/cont-layer/mongodb/post-init.d/]
     files:
       - [mongodb/README.md.tpl, usr/share/cont-docs/10-mongodb.txt]
     run:

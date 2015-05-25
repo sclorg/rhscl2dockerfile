@@ -48,17 +48,15 @@ function get_port() {
     fi
 }
 
-# Change config file $2 according environment variables with prefix $1
-function update_conf() {
-    [ -z "$1" -o -z "$2" -o ! -r "$2" ] && return 1
+# Change config option $1 in configuration file $3 to have value $2
+function update_option() {
+    [ -z "$1" -o -z "$2" -o -z "$3" -o ! -r "$3" ] && return 1
 
-    for option in $(set | grep $1 | sed -r -e "s|$1||"); do
-        # Delete old option from config file
-        option_name=$(echo $option | sed -r -e 's|(\w*)=.*|\1|')
-        sed -r -e "/^$option_name/d" $2 > $HOME/.tmp.conf
-        cat $HOME/.tmp.conf > $2
-        rm $HOME/.tmp.conf
-        # Add new option into config file
-        echo $option >> $2
-    done
+    # Delete old option from config file
+    sed -r -e "/^\s*$1/d" $3 > $HOME/.tmp.conf
+    cat $HOME/.tmp.conf > $3
+    rm $HOME/.tmp.conf
+
+    # Add new option into config file
+    echo "$1 = $2" >> $3
 }

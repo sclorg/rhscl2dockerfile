@@ -21,10 +21,10 @@ functionality).
 Usage
 -----
 
-Without specifying any commands on the command line, the mongod daemon is run
+To pass arguments that are used for initializing the database (if it is not yet initialized), define them as environment variables
 
 ```
-docker run -d -p 27017:27017 THIS_IMAGE
+docker run -d  -e MONGODB_USER=user -e MONGODB_PASSWORD=pass -e MONGODB_DATABASE=db -e MONGODB_ADMIN_PASSWORD=adminpass -p 27017:27017 THIS_IMAGE
 ```
 
 It is recommended to use run the container with mounted data directory everytime.
@@ -32,14 +32,10 @@ This example shows how to run the container with `/host/data` directory mounted
 and so the database will store data into this directory on host:
 
 ```
-docker run -d -v /host/data:/var/lib/mongodb/data THIS_IMAGE
+docker run -d -e MONGODB_USER=user -e MONGODB_PASSWORD=pass -e MONGODB_DATABASE=db -e MONGODB_ADMIN_PASSWORD=adminpass -v /host/data:/var/lib/mongodb/data THIS_IMAGE
 ```
 
-To pass arguments that are used for initializing the database if it is not yet initialized, define them as environment variables
-
-```
-docker run -d  -e MONGODB_USER=user -e MONGODB_PASSWORD=pass -e MONGODB_DATABASE=db -e MONGODB_ADMIN_PASSWORD=adminpass -p 27017:27017 THIS_IMAGE
-```
+Without specifying any commands on the command line, the mongod daemon is run.
 
 To run Bash in the built Docker image, run
 
@@ -53,15 +49,6 @@ To connect to running container, run
 docker exec -t -i mongodb_database bash
 ```
 
-Authentication
---------------
-
-By default MongoDB run without enabled authentication.
-
-To enable authentication:
-* Admin password `MONGODB_ADMIN_PASSWORD` has to be set. This create user *admin* in database *admin* and this user have these roles: 'dbAdminAnyDatabase', 'userAdminAnyDatabase' , 'readWriteAnyDatabase', 'clusterAdmin'. Optionally it is possible to create user `MONGODB_USER` with password `MONGODB_PASSWORD` in database `MONGODB_DATABASE`. This user have this role: 'readWrite'.
-* To run MongoDB daemon with enabled authentication the database mounted into `/var/lib/mongodb/data` has to be already initialized. When environment variable `MONGODB_AUTH` is set to `true` authentication is enabled.
-
 Environment variables and volumes
 ---------------------------------
 
@@ -70,16 +57,26 @@ initialization, by passing `-e VAR=VALUE` to the Docker run command.
 
 |    Variable name          |    Description                              |
 | :------------------------ | ------------------------------------------- |
-|  `MONGODB_ADMIN_PASSWORD` | Password for the admin user                 |
 |  `MONGODB_USER`           | User name for MongoDB account to be created |
 |  `MONGODB_PASSWORD`       | Password for the user account               |
 |  `MONGODB_DATABASE`       | Database name in which to create user       |
-|  `MONGODB_AUTH`           | Enable authentication (don't create users)  |
+|  `MONGODB_ADMIN_PASSWORD` | Password for the admin user                 |
 
+Following environment variables influence MongoDB configuration file. They are all optional.
+
+|    Variable name      |    Description                                                            |  Default  |
+| :-------------------- | ------------------------------------------------------------------------- | --------- |
+|  `MONGODB_NOPREALLOC` | Disable data file preallocation.                                          |  true     |
+|  `MONGODB_SMALLFILES` | Set MongoDB to use a smaller default data file size.                      |  true     |
+|  `MONGODB_QUIET`      | Runs MongoDB in a quiet mode that attempts to limit the amount of output. |  true     |
 
 You can also set following mount points by passing `-v /host:/container` flag to docker.
 
 |  Volume mount point      | Description            |
 | :----------------------- | ---------------------- |
 |  `/var/lib/mongodb/data` | MongoDB data directory |
+
+**Notice: When mouting directory from host into the container, ensure that the mounted
+directory has the appropriate permissions and that the owner and group of the directory
+matches the user UID or name which is running inside the container.**
 

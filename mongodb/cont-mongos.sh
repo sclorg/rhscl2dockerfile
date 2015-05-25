@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source /usr/share/cont-layer/common/functions.sh
-
 source /usr/share/cont-layer/mongodb/common/base-functions.sh
 
 # Shutdown mongod on SIGINT/SIGTERM
@@ -29,9 +27,6 @@ MAX_ATTEMPTS=90
 SLEEP_TIME=2
 
 mongos_config_file="/etc/mongos.conf"
-
-# Change config file according MONGOS_CONFIG_* variables
-update_conf "MONGOS_CONFIG_" $mongos_config_file
 
 # Get options from config file
 pidfile=$(get_option "pidfilepath" $mongos_config_file)

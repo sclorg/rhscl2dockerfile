@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source /usr/share/cont-layer/common/functions.sh
-
 source /usr/share/cont-layer/mongodb/common/base-functions.sh
 
 # Shutdown mongod on SIGINT/SIGTERM
@@ -19,9 +17,6 @@ MAX_ATTEMPTS=90
 SLEEP_TIME=2
 
 mongod_config_file="/etc/mongod.conf"
-
-# Change config file according MONGOD_CONFIG_* variables
-update_conf "MONGOD_CONFIG_" $mongod_config_file
 
 # Get options from config file
 dbpath=$(get_option "dbpath" $mongod_config_file)
