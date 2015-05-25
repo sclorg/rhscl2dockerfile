@@ -208,10 +208,14 @@ containers:
     collection: httpd24
     install: httpd24 python27 python27-python-pip python27-python-wheel python27-python-setuptools @devel_libs
     expose: [80, 443]
+    add:
+        - [python-common/sti, sti, /usr/share/]
   httpd24-python33:
     collection: httpd24
     install: httpd24 python33 python33-python-pip python33-python-setuptools python33-mod_wsgi @devel_libs
     expose: [80, 443]
+    add:
+        - [python-common/sti, sti, /usr/share/]
   perl516:
     install: perl516 @devel_libs
   httpd24-perl516:
@@ -256,8 +260,12 @@ containers:
     cmd: ["cont-postgresql-cmd"]
   python27:
     install: python27 python27-python-pip python27-python-wheel python27-python-setuptools @devel_libs
+    add:
+        - [python-common/sti, sti, /usr/share/]
   python33:
     install: python33 python33-python-pip python33-python-setuptools @devel_libs
+    add:
+        - [python-common/sti, sti, /usr/share/]
   ror40:
     install: ror40 @devel_libs
   devtoolset-3:
@@ -364,6 +372,8 @@ containers:
   rh-python34:
     install: rh-python34 @devel_libs
     expose: [8000]
+    add:
+        - [python-common/sti, sti, /usr/share/]
   rh-ror41:
     install: rh-ror41 @devel_libs
   rh-ruby22:
