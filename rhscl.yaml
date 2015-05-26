@@ -60,6 +60,7 @@ templates:
       - [README.tpl, README.md]
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
+    entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["container-usage"]
     devel_libs: |
       \
@@ -101,6 +102,7 @@ templates:
       - [README.tpl, README.md]
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
+    entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["container-usage"]
     devel_libs: |
       \
@@ -254,7 +256,6 @@ containers:
       - /usr/libexec/cont-setup
     volume: ["/var/lib/pgsql/data"]
     user: postgres
-    entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["cont-postgresql-cmd"]
   python27:
     install: python27 @devel_libs
