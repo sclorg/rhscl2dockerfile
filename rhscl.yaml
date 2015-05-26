@@ -268,6 +268,9 @@ containers:
         - [python-common/sti, sti, /usr/share/]
   ror40:
     install: ror40 @devel_libs
+    add:
+        - [ruby-common/sti, sti, /usr/share/]
+        - [ruby-common/contrib, contrib, /usr/share/]
   devtoolset-3:
     install: devtoolset-3
   devtoolset-3-toolchain:
@@ -376,6 +379,9 @@ containers:
         - [python-common/sti, sti, /usr/share/]
   rh-ror41:
     install: rh-ror41 @devel_libs
+    add:
+        - [ruby-common/sti, sti, /usr/share/]
+        - [ruby-common/contrib, contrib, /usr/share/]
   rh-ruby22:
     install: rh-ruby22 @devel_libs
   rh-postgresql94:
