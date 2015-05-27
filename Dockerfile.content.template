@@ -14,6 +14,12 @@ ADD {{ f['src'] }} {{ f['dst'] }}
 RUN	{% for c in run -%}
 {{ c }} && \
 	{% endfor -%}:{% endif %}
+{% if user == 1001 %}
+ENV HOME /home/default
+RUN     groupadd -r default -f -g 1001 && \
+        useradd -u 1001 -r -g default -d ${HOME} -s /sbin/nologin \
+                        -c "Default Application User" default
+{% endif -%}
 {% if user %}
 USER {{ user|replace("'", "\"") }}
 {% endif -%}

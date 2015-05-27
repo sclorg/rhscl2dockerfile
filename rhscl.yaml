@@ -60,6 +60,7 @@ templates:
       - [README.tpl, README.md]
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
+    user: 1001
     cmd: ["container-usage"]
     devel_libs: |
       \
@@ -101,6 +102,7 @@ templates:
       - [README.tpl, README.md]
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
+    user: 1001
     cmd: ["container-usage"]
     devel_libs: |
       \
@@ -149,7 +151,7 @@ containers:
     readme:
       - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
-    user: mysql
+    user: 27
     cmd: ["cont-mysqld"]
     logfile: /var/log/mariadb/mariadb.log
     pidfile: /var/run/mariadb/mariadb.pid
@@ -168,7 +170,7 @@ containers:
     readme:
       - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
-    user: mysql
+    user: 27
     cmd: ["cont-mysqld"]
     logfile: /var/log/mysql/mysqld.log
     pidfile: /var/run/mysql/mysqld.pid
@@ -195,7 +197,7 @@ containers:
     readme:
       - mongodb/README.md.tpl
     volume: /var/lib/mongodb/data
-    user: mongodb
+    user: 184
     cmd: ["cont-mongod"]
   httpd24:
     install: httpd24
@@ -255,7 +257,7 @@ containers:
     run:
       - /usr/libexec/cont-setup
     volume: ["/var/lib/pgsql/data"]
-    user: postgres
+    user: 26
     entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["cont-postgresql-cmd"]
   python27:
@@ -314,7 +316,7 @@ containers:
     readme:
       - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
-    user: mysql
+    user: 27
     cmd: ["cont-mysqld"]
     logfile: /var/log/mariadb/mariadb.log
     pidfile: /var/run/mariadb/mariadb.pid
@@ -341,7 +343,7 @@ containers:
     readme:
       - mongodb/README.md.tpl
     volume: /var/lib/mongodb/data
-    user: mongodb
+    user: 184
     cmd: ["cont-mongod"]
   rh-mysql56:
     name: MySQL 5.6
@@ -358,7 +360,7 @@ containers:
     readme:
       - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
-    user: mysql
+    user: 27
     cmd: ["cont-mysqld"]
     logfile: /var/log/mysql/mysqld.log
     pidfile: /var/run/mysql/mysqld.pid
