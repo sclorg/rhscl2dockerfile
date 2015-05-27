@@ -237,17 +237,12 @@ containers:
     install: php55 @devel_libs
   ruby193:
     install: ruby193 nodejs010 @devel_libs
-    enable: [ruby193, nodejs010]
     add:
         - [ruby-common/sti, sti, /usr/share/]
         - [ruby-common/contrib/.gemrc, .gemrc, $HOME]
         - [ruby-common/contrib/etc/puma.cfg, puma.cfg, /etc]
-        - [common/enable.sh.tpl, .bashrc, $HOME]
   ruby200:
     install: ruby200 @devel_libs
-    enable: [ruby200]
-    add:
-        - [common/enable.sh.tpl, .bashrc, $HOME]
   postgresql92:
     install: postgresql92
     expose: [5432]
@@ -279,7 +274,6 @@ containers:
         - [ruby-common/sti, sti, /usr/share/]
         - [ruby-common/contrib/.gemrc, .gemrc, $HOME]
         - [ruby-common/contrib/etc/puma.cfg, puma.cfg, /etc]
-        - [common/enable.sh.tpl, .bashrc, $HOME]
   devtoolset-3:
     install: devtoolset-3
   devtoolset-3-toolchain:
@@ -393,12 +387,9 @@ containers:
         - [ruby-common/sti, sti, /usr/share/]
         - [ruby-common/contrib/.gemrc, .gemrc, $HOME]
         - [ruby-common/contrib/etc/puma.cfg, puma.cfg, /etc]
-        - [common/enable.sh.tpl, .bashrc, $HOME]
   rh-ruby22:
     install: rh-ruby22 @devel_libs
     enable: [rh-ruby22]
-    add:
-        - [common/enable.sh.tpl, .bashrc, $HOME]
   rh-postgresql94:
     install: rh-postgresql94
     expose: [5432]
