@@ -236,7 +236,10 @@ containers:
   php55:
     install: php55 @devel_libs
   ruby193:
-    install: ruby193 @devel_libs
+    install: ruby193 nodejs010 @devel_libs
+    add:
+        - [ruby-common/sti, sti, /usr/share/]
+        - [ruby-common/contrib, contrib, /usr/share/]
   ruby200:
     install: ruby200 @devel_libs
   postgresql92:
