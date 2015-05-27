@@ -237,6 +237,7 @@ containers:
     install: php55 @devel_libs
   ruby193:
     install: ruby193 nodejs010 @devel_libs
+    enable: [ruby193, nodejs010]
     add:
         - [ruby-common/sti, sti, /usr/share/]
         - [ruby-common/contrib/.gemrc, .gemrc, $HOME]
@@ -389,7 +390,6 @@ containers:
         - [ruby-common/contrib/etc/puma.cfg, puma.cfg, /etc]
   rh-ruby22:
     install: rh-ruby22 @devel_libs
-    enable: [rh-ruby22]
   rh-postgresql94:
     install: rh-postgresql94
     expose: [5432]
