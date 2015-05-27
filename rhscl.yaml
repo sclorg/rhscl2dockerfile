@@ -59,36 +59,36 @@ templates:
       - [Dockerfile.RHEL6.tpl, Dockerfile]
       - [README.tpl, README.md]
     envs:
-      - "BASH_ENV        /etc/profile.d/cont-env.sh"
+      - "BASH_ENV=/etc/profile.d/cont-env.sh"
     cmd: ["container-usage"]
-    devel_libs: |
+    devel_libs: &devellibs |
       \
-      autoconf \
-      automake \
-      bsdtar \
-      curl-devel \
-      epel-release \
-      findutils \
-      gcc-c++ \
-      gdb \
-      gettext \
-      libxml2-devel \
-      libxslt-devel \
-      lsof \
-      make \
-      mysql-devel \
-      mysql-libs \
-      openssl-devel \
-      postgresql-devel \
-      procps-ng \
-      scl-utils \
-      sqlite-devel \
-      tar \
-      unzip \
-      wget \
-      which \
-      yum-utils \
-      zlib-devel \
+          autoconf \
+          automake \
+          bsdtar \
+          curl-devel \
+          epel-release \
+          findutils \
+          gcc-c++ \
+          gdb \
+          gettext \
+          libxml2-devel \
+          libxslt-devel \
+          lsof \
+          make \
+          mysql-devel \
+          mysql-libs \
+          openssl-devel \
+          postgresql-devel \
+          procps-ng \
+          scl-utils \
+          sqlite-devel \
+          tar \
+          unzip \
+          wget \
+          which \
+          yum-utils \
+          zlib-devel \
 
   rhel7:
     add:
@@ -100,46 +100,27 @@ templates:
       - [Dockerfile.RHEL7.tpl, Dockerfile]
       - [README.tpl, README.md]
     envs:
-      - "BASH_ENV        /etc/profile.d/cont-env.sh"
+      - "BASH_ENV=/etc/profile.d/cont-env.sh"
     cmd: ["container-usage"]
-    devel_libs: |
-      \
-      autoconf \
-      automake \
-      bsdtar \
-      curl-devel \
-      epel-release \
-      gcc-c++ \
-      gdb \
-      gettext \
-      libxml2-devel \
-      libxslt-devel \
-      lsof \
-      make \
-      mysql-devel \
-      mysql-libs \
-      openssl-devel \
-      postgresql-devel \
-      procps-ng \
-      scl-utils \
-      sqlite-devel \
-      tar \
-      unzip \
-      wget \
-      which \
-      yum-utils \
-      zlib-devel \
+    devel_libs: *devellibs
 
 # For each container to define, define packages parameter to yum
 # install plus list of ports to expose.  The SCL collection name must
 # be defined if not the name used here.
 containers:
   mariadb55:
-    name: MariaDB 5.5
+    name: &mariadb55name MariaDB 5.5
+    description: &mariadb55desc MariaDB is a multi-user, multi-threaded drop-in replacement for MySQL database server
+    labels:
+      k8s.io/display-name: *mariadb55name
+      k8s.io/description: *mariadb55desc
+      openshift.io/tags: database,mysql,mariadb,mariadb55
+      openshift.io/expose-services: 3306:mysql
     install: mariadb55 hostname
     expose: [3306]
     envs:
-      - "HOME            /var/lib/mysql"
+      - "MARIADB_VERSION=5.5"
+      - "HOME=/var/lib/mysql"
     add:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
@@ -153,12 +134,20 @@ containers:
     cmd: ["cont-mysqld"]
     logfile: /var/log/mariadb/mariadb.log
     pidfile: /var/run/mariadb/mariadb.pid
+
   mysql55:
-    name: MySQL 5.5
+    name: &mysql55name MySQL 5.5
+    description: &mysql55desc MySQL is a multi-user, multi-threaded SQL database server
+    labels:
+      k8s.io/display-name: *mysql55name
+      k8s.io/description: *mysql55desc
+      openshift.io/tags: database,mysql,mysql55
+      openshift.io/expose-services: 3306:mysql
     install: mysql55 hostname
     expose: [3306]
     envs:
-      - "HOME            /var/lib/mysql"
+      - "MYSQL_VERSION=5.5"
+      - "HOME=/var/lib/mysql"
     add:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
@@ -172,12 +161,20 @@ containers:
     cmd: ["cont-mysqld"]
     logfile: /var/log/mysql/mysqld.log
     pidfile: /var/run/mysql/mysqld.pid
+
   mongodb24:
-    name: MongoDB 2.4
+    name: &rh-mongodb24name MongoDB 2.4
+    description: &rh-mongodb24desc MongoDB is a scalable, high-performance, open source NoSQL database.
+    labels:
+      k8s.io/display-name: *rh-mongodb24name
+      k8s.io/description: *rh-mongodb24desc
+      openshift.io/tags: database,mongodb,mongodb24
+      openshift.io/expose-services: 27017:mongodb
     install: mongodb24 mongodb24-mongodb
     expose: [27017, 28017]
     envs:
-      - "HOME            /var/lib/mongodb"
+      - "MONGODB_VERSION=2.4"
+      - "HOME=/var/lib/mongodb"
     add:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mongodb/cont-mongod.sh, cont-mongod, /usr/bin/]
@@ -197,58 +194,134 @@ containers:
     volume: /var/lib/mongodb/data
     user: mongodb
     cmd: ["cont-mongod"]
+
   httpd24:
     install: httpd24
     expose: [80, 443]
+
   httpd24-php55:
     collection: httpd24
     install: httpd24 php55 php55-php @devel_libs
     expose: [80, 443]
+
   httpd24-python27:
     collection: httpd24
     install: httpd24 python27 python27-python-pip python27-python-wheel python27-python-setuptools @devel_libs
     expose: [80, 443]
     add:
         - [python-common/sti, sti, /usr/share/]
+
   httpd24-python33:
     collection: httpd24
     install: httpd24 python33 python33-python-pip python33-python-setuptools python33-mod_wsgi @devel_libs
     expose: [80, 443]
     add:
         - [python-common/sti, sti, /usr/share/]
+
   perl516:
-    install: perl516 @devel_libs
+    name: &perl516name Apache 2.4 with mod_perl/5.16
+    description: &perl516desc Platform for building and running Perl 5.16 applications
+    expose: [8080]
+    envs:
+      - "PERL_VERSION=5.16"
+    labels:
+      k8s.io/display-name: *perl516name
+      k8s.io/description: *perl516desc
+      openshift.io/tags: builder,perl,perl516
+      openshift.io/expose-services: 8080:http
+    install: perl516 httpd24 perl516-mod_perl @devel_libs
+
   httpd24-perl516:
     collection: httpd24
     install: httpd24 perl516 perl516-mod_perl @devel_libs
     expose: [80, 443]
+
   nginx14:
     install: nginx14
     expose: [80, 443]
+
   nginx16:
     install: nginx16
     expose: [80, 443]
+
   nodejs010:
+    name: &nodejs010name Node.js 0.10
+    description: &nodejs010desc Platform for building and running Node.js 0.10 applications
+    expose: [8080]
+    envs:
+      - "NODEJS_VERSION=0.10"
+    labels:
+      k8s.io/display-name: *nodejs010name
+      k8s.io/description: *nodejs010desc
+      openshift.io/tags: builder,nodejs,nodejs010
+      openshift.io/expose-services: 8080:http
     install: nodejs010 @devel_libs
-    expose: [80]
+
   php54:
+    name: &php54name Apache 2.4 with PHP 5.4
+    description: &php54desc Platform for building and running PHP 5.4 applications
+    expose: [8080]
+    envs:
+      - "PHP_VERSION=5.4"
+    labels:
+      k8s.io/display-name: *php54name
+      k8s.io/description: *php54desc
+      openshift.io/tags: builder,php,php54
+      openshift.io/expose-services: 8080:http
     install: php54 @devel_libs
+
   php55:
+    name: &php55name Apache 2.4 with PHP 5.5
+    description: &php55desc Platform for building and running PHP 5.5 applications
+    expose: [8080]
+    envs:
+      - "PHP_VERSION=5.5"
+    labels:
+      k8s.io/display-name: *php55name
+      k8s.io/description: *php55desc
+      openshift.io/tags: builder,php,php55
+      openshift.io/expose-services: 8080:http
     install: php55 @devel_libs
+
   ruby193:
+    name: &ruby193name Ruby 1.9.3
+    description: &ruby193desc Platform for building and running Ruby 1.9.3 applications
+    envs:
+      - "RUBY_VERSION=1.9.3"
+    labels:
+      k8s.io/display-name: *ruby193name
+      k8s.io/description: *ruby193desc
+      openshift.io/tags: builder,ruby,ruby193
+      openshift.io/expose-services: 8080:http
     install: ruby193 @devel_libs
+
   ruby200:
+    name: &ruby200name Ruby 2.0
+    description: &ruby200desc Platform for building and running Ruby 2.0 applications
+    envs:
+      - "RUBY_VERSION=2.0"
+    labels:
+      k8s.io/display-name: *ruby200name
+      k8s.io/description: *ruby200desc
+      openshift.io/tags: builder,ruby,ruby200
+      openshift.io/expose-services: 8080:http
     install: ruby200 @devel_libs
-  ruby200-ror40:
-    collection: ror40
-    install: ruby200 ror40 @devel_libs
+
   postgresql92:
+    name: &postgresql92name PostgreSQL 9.2
+    description: &postgresql92desc PostgreSQL is an advanced Object-Relational database management system
+    labels:
+      k8s.io/display-name: *postgresql92name
+      k8s.io/description: *postgresql92desc
+      openshift.io/tags: database,postgresql,postgresql92
+      openshift.io/expose-services: 5432:postgresql
     install: postgresql92
     expose: [5432]
     envs:
-      - "HOME            /var/lib/pgsql"
+      - "POSTGRESQL_VERSION=9.2"
+      - "HOME=/var/lib/pgsql"
     add:
-      - [common/cont-lib/root/.bashrc, .bashrc, /var/lib/pgsql/]
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [postgresql/usr, usr, /]
       - [postgresql/var, var, /]
       - [postgresql/cont-setup.sh, cont-setup, /usr/libexec/]
@@ -258,24 +331,60 @@ containers:
     user: postgres
     entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["cont-postgresql-cmd"]
+
   python27:
+    name: &python27name Python 2.7
+    description: &python27desc Platform for building and running Python 2.7 applications
+    expose: [8080]
+    envs:
+      - "PYTHON_VERSION=2.7"
+    labels:
+      k8s.io/display-name: *python27name
+      k8s.io/description: *python27desc
+      openshift.io/tags: builder,python,python27
+      openshift.io/expose-services: 8080:http
     install: python27 python27-python-pip python27-python-wheel python27-python-setuptools @devel_libs
     add:
         - [python-common/sti, sti, /usr/share/]
+
   python33:
+    name: &python33name Python 3.3
+    description: &python33desc Platform for building and running Python 3.3 applications
+    expose: [8080]
+    envs:
+      - "PYTHON_VERSION=3.3"
+    labels:
+      k8s.io/display-name: *python33name
+      k8s.io/description: *python33desc
+      openshift.io/tags: builder,python,python33
+      openshift.io/expose-services: 8080:http
     install: python33 python33-python-pip python33-python-setuptools @devel_libs
     add:
         - [python-common/sti, sti, /usr/share/]
+
   ror40:
+    name: &ror40name Ruby on Rails 4.0
+    description: &ror40desc Platform for building and running Ruby on Rails 4.0 applications
+    envs:
+      - "RUBY_ON_RAILS_VERSION=4.0"
+    labels:
+      k8s.io/display-name: *ror40name
+      k8s.io/description: *ror40desc
+      openshift.io/tags: builder,ror,ruby,ruby200,ror40
+      openshift.io/expose-services: 8080:http
     install: ror40 @devel_libs
+
   devtoolset-3:
     install: devtoolset-3
+
   devtoolset-3-toolchain:
     collection: devtoolset-3
     install: devtoolset-3-gcc devtoolset-3-gcc-c++ devtoolset-3-gcc-gfortran devtoolset-3-gdb
+
   devtoolset-3-eclipse:
     collection: devtoolset-3
     install: devtoolset-3-gcc devtoolset-3-gcc-c++ devtoolset-3-gcc-gfortran devtoolset-3-gdb devtoolset-3-ide
+
   devtoolset-3-systemtap:
     collection: devtoolset-3
     install: devtoolset-3-systemtap
@@ -285,26 +394,39 @@ containers:
       - [ systemtap.txt.tpl, usr/share/cont-docs/systemtap.txt ]
     readme:
       - systemtap.txt.tpl
+
   devtoolset-3-dyninst:
     collection: devtoolset-3
     install: devtoolset-3-dyninst
+
   devtoolset-3-elfutils:
     collection: devtoolset-3
     install: devtoolset-3-elfutils
+
   devtoolset-3-oprofile:
     collection: devtoolset-3
     install: devtoolset-3-oprofile
+
   devtoolset-3-valgrind:
     collection: devtoolset-3
     install: devtoolset-3-valgrind
+
   rh-java-common:
     install: rh-java-common
+
   rh-mariadb100:
-    name: MariaDB 10.0
+    name: &rh-mariadb100name MariaDB 10.0
+    description: &rh-mariadb100desc MariaDB is a multi-user, multi-threaded drop-in replacement for MySQL database server
+    labels:
+      k8s.io/display-name: *rh-mariadb100name
+      k8s.io/description: *rh-mariadb100desc
+      openshift.io/tags: database,mysql,mariadb,rh-mariadb100
+      openshift.io/expose-services: 3306:mysql
     install: rh-mariadb100
     expose: [3306]
     envs:
-      - "HOME            /var/lib/mysql"
+      - "MARIADB_VERSION=10.0"
+      - "HOME=/var/lib/mysql"
     add:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
@@ -318,12 +440,20 @@ containers:
     cmd: ["cont-mysqld"]
     logfile: /var/log/mariadb/mariadb.log
     pidfile: /var/run/mariadb/mariadb.pid
+
   rh-mongodb26:
-    name: MongoDB 2.6
+    name: &rh-mongodb26name MongoDB 2.6
+    description: &rh-mongodb26desc MongoDB is a scalable, high-performance, open source NoSQL database.
+    labels:
+      k8s.io/display-name: *rh-mongodb26name
+      k8s.io/description: *rh-mongodb26desc
+      openshift.io/tags: database,mongodb,rh-mongodb26
+      openshift.io/expose-services: 27017:mongodb
     install: rh-mongodb26 rh-mongodb26-mongodb
     expose: [27017, 28017]
     envs:
-      - "HOME            /var/lib/mongodb"
+      - "MONGODB_VERSION=2.6"
+      - "HOME=/var/lib/mongodb"
     add:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mongodb/cont-mongod.sh, cont-mongod, /usr/bin/]
@@ -343,12 +473,20 @@ containers:
     volume: /var/lib/mongodb/data
     user: mongodb
     cmd: ["cont-mongod"]
+
   rh-mysql56:
-    name: MySQL 5.6
+    name: &rh-mysql56name MySQL 5.6
+    description: &rh-mysql56desc MySQL is a multi-user, multi-threaded SQL database server
+    labels:
+      k8s.io/display-name: *rh-mysql56name
+      k8s.io/description: *rh-mysql56desc
+      openshift.io/tags: database,mysql,rh-mysql56
+      openshift.io/expose-services: 3306:mysql
     install: rh-mysql56
     expose: [3306]
     envs:
-      - "HOME            /var/lib/mysql"
+      - "MYSQL_VERSION=5.6"
+      - "HOME=/var/lib/mysql"
     add:
       - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
       - [mysql-common/usr, usr, /]
@@ -362,22 +500,96 @@ containers:
     cmd: ["cont-mysqld"]
     logfile: /var/log/mysql/mysqld.log
     pidfile: /var/run/mysql/mysqld.pid
+
   rh-passenger40:
     install: rh-passenger40 rh-passenger40-ruby22
     enable: [rh-passenger40, rh-ruby22]
+
   rh-perl520:
-    install: rh-perl520 @devel_libs
+    name: &rh-perl520name Apache 2.4 with mod_perl/5.20
+    description: &rh-perl520desc Platform for building and running Perl 5.20 applications
+    expose: [8080]
+    envs:
+      - "PERL_VERSION=5.20"
+    labels:
+      k8s.io/display-name: *rh-perl520name
+      k8s.io/description: *rh-perl520desc
+      openshift.io/tags: builder,perl,rh-perl520
+      openshift.io/expose-services: 8080:http
+    install: rh-perl520 rh-perl520-mod_perl httpd24 @devel_libs
+
   rh-php56:
+    name: &rh-php56name Apache 2.4 with PHP 5.6
+    description: &rh-php56desc Platform for building and running PHP 5.6 applications
+    expose: [8080]
+    envs:
+      - "PHP_VERSION=5.6"
+    labels:
+      k8s.io/display-name: *rh-php56name
+      k8s.io/description: *rh-php56desc
+      openshift.io/tags: builder,php,rh-php56
+      openshift.io/expose-services: 8080:http
     install: rh-php56 @devel_libs
+
   rh-python34:
+    name: &rh-python34name Python 3.4
+    description: &rh-python34desc Platform for building and running Python 3.4 applications
+    expose: [8080]
+    envs:
+      - "PYTHON_VERSION=3.4"
+    labels:
+      k8s.io/display-name: *rh-python34name
+      k8s.io/description: *rh-python34desc
+      openshift.io/tags: builder,python,rh-python34
+      openshift.io/expose-services: 8080:http
     install: rh-python34 @devel_libs
-    expose: [8000]
     add:
         - [python-common/sti, sti, /usr/share/]
   rh-ror41:
+    name: &ror41name Ruby on Rails 4.1
+    description: &ror41desc Platform for building and running Ruby on Rails 4.1 applications
+    envs:
+      - "RUBY_ON_RAILS_VERSION=4.1"
+    labels:
+      k8s.io/display-name: *ror41name
+      k8s.io/description: *ror41desc
+      openshift.io/tags: builder,ror,ruby,ruby22,ror41
+      openshift.io/expose-services: 8080:http
     install: rh-ror41 @devel_libs
+
   rh-ruby22:
+    name: &rh-ruby22name Ruby 2.2
+    description: &rh-ruby22desc Platform for building and running Ruby 2.2 applications
+    envs:
+      - "RUBY_VERSION=2.2"
+    labels:
+      k8s.io/display-name: *rh-ruby22name
+      k8s.io/description: *rh-ruby22desc
+      openshift.io/tags: builder,ruby,rh-ruby22
+      openshift.io/expose-services: 8080:http
     install: rh-ruby22 @devel_libs
+
   rh-postgresql94:
+    name: &rh-postgresql94name PostgreSQL 9.4
+    description: &rh-postgresql94desc PostgreSQL is an advanced Object-Relational database management system
+    labels:
+      k8s.io/display-name: *rh-postgresql94name
+      k8s.io/description: *rh-postgresql94desc
+      openshift.io/tags: database,postgresql,rh-postgresql94
+      openshift.io/expose-services: 5432:postgresql
     install: rh-postgresql94
     expose: [5432]
+    envs:
+      - "POSTGRESQL_VERSION=9.4"
+      - "HOME=/var/lib/pgsql"
+    add:
+      - [common/cont-lib/root/.bashrc, .bashrc, $HOME]
+      - [postgresql/usr, usr, /]
+      - [postgresql/var, var, /]
+      - [postgresql/cont-setup.sh, cont-setup, /usr/libexec/]
+    run:
+      - /usr/libexec/cont-setup
+    volume: ["/var/lib/pgsql/data"]
+    user: postgres
+    entrypoint: ["/usr/bin/container-entrypoint"]
+    cmd: ["cont-postgresql-cmd"]
