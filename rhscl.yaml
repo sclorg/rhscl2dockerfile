@@ -264,7 +264,7 @@ containers:
     add:
         - [python-common/sti, sti, /usr/share/]
   ror40:
-    install: ror40 @devel_libs
+    install: ror40 nodejs010 @devel_libs
     add:
         - [ruby-common/sti, sti, /usr/share/]
         - [ruby-common/contrib, contrib, /usr/share/]
@@ -375,7 +375,7 @@ containers:
     add:
         - [python-common/sti, sti, /usr/share/]
   rh-ror41:
-    install: rh-ror41 @devel_libs
+    install: rh-ror41 nodejs010 @devel_libs
     add:
         - [ruby-common/sti, sti, /usr/share/]
         - [ruby-common/contrib, contrib, /usr/share/]
