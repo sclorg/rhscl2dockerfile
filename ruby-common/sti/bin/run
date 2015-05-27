@@ -14,7 +14,7 @@ export RACK_ENV=${RACK_ENV:-"production"}
 export RAILS_ENV=${RAILS_ENV:-"${RACK_ENV}"}
 
 if is_puma_installed; then
-  exec bundle exec "puma --config ../etc/puma.cfg"
+  exec bundle exec "puma --config /etc/puma.cfg"
 else
   echo "You might consider adding 'puma' into your Gemfile."
   if [ -f Gemfile ]; then
