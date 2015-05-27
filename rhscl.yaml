@@ -237,11 +237,13 @@ containers:
     install: php55 @devel_libs
   ruby193:
     install: ruby193 nodejs010 @devel_libs
+    enable: [ruby193, nodejs010]
     add:
         - [ruby-common/sti, sti, /usr/share/]
         - [ruby-common/contrib, contrib, /usr/share/]
   ruby200:
     install: ruby200 @devel_libs
+    enable: [ruby200]
   postgresql92:
     install: postgresql92
     expose: [5432]
@@ -268,6 +270,7 @@ containers:
         - [python-common/sti, sti, /usr/share/]
   ror40:
     install: ror40 nodejs010 @devel_libs
+    enable: [ror40, nodejs010]
     add:
         - [ruby-common/sti, sti, /usr/share/]
         - [ruby-common/contrib, contrib, /usr/share/]
@@ -379,11 +382,13 @@ containers:
         - [python-common/sti, sti, /usr/share/]
   rh-ror41:
     install: rh-ror41 nodejs010 @devel_libs
+    enable: [rh-ror41, nodejs010]
     add:
         - [ruby-common/sti, sti, /usr/share/]
         - [ruby-common/contrib, contrib, /usr/share/]
   rh-ruby22:
     install: rh-ruby22 @devel_libs
+    enable: [rh-ruby22]
   rh-postgresql94:
     install: rh-postgresql94
     expose: [5432]
