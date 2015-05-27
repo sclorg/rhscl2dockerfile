@@ -239,9 +239,6 @@ containers:
     install: ruby193 @devel_libs
   ruby200:
     install: ruby200 @devel_libs
-  ruby200-ror40:
-    collection: ror40
-    install: ruby200 ror40 @devel_libs
   postgresql92:
     install: postgresql92
     expose: [5432]
