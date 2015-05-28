@@ -229,6 +229,7 @@ containers:
     expose: [80]
     add:
         - [nodejs-common/sti, sti, /usr/share/]
+        - [nodejs-common/etc, etc, /]
   php54:
     install: php54 @devel_libs
   php55:
