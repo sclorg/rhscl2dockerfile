@@ -61,6 +61,7 @@ templates:
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
     user: 1001
+    entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["container-usage"]
     devel_libs: |
       \
@@ -103,6 +104,7 @@ templates:
     envs:
       - "BASH_ENV        /etc/profile.d/cont-env.sh"
     user: 1001
+    entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["container-usage"]
     devel_libs: |
       \
@@ -138,7 +140,8 @@ templates:
 containers:
   mariadb55:
     name: MariaDB 5.5
-    install: mariadb55 hostname
+    # gettext for envsubst, hostname for initdb
+    install: mariadb55 hostname gettext
     expose: [3306]
     envs:
       - "HOME            /var/lib/mysql"
@@ -157,7 +160,8 @@ containers:
     pidfile: /var/run/mariadb/mariadb.pid
   mysql55:
     name: MySQL 5.5
-    install: mysql55 hostname
+    # gettext for envsubst, hostname for initdb
+    install: mysql55 hostname gettext
     expose: [3306]
     envs:
       - "HOME            /var/lib/mysql"
@@ -258,7 +262,6 @@ containers:
       - /usr/libexec/cont-setup
     volume: ["/var/lib/pgsql/data"]
     user: 26
-    entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["cont-postgresql-cmd"]
   python27:
     install: python27 python27-python-pip python27-python-wheel python27-python-setuptools @devel_libs
@@ -303,7 +306,8 @@ containers:
     install: rh-java-common
   rh-mariadb100:
     name: MariaDB 10.0
-    install: rh-mariadb100
+    # gettext for envsubst, hostname for initdb
+    install: rh-mariadb100 hostname gettext
     expose: [3306]
     envs:
       - "HOME            /var/lib/mysql"
@@ -347,7 +351,8 @@ containers:
     cmd: ["cont-mongod"]
   rh-mysql56:
     name: MySQL 5.6
-    install: rh-mysql56
+    # gettext for envsubst, hostname for initdb
+    install: rh-mysql56 hostname gettext
     expose: [3306]
     envs:
       - "HOME            /var/lib/mysql"
