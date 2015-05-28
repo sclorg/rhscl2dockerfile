@@ -6,12 +6,12 @@
 [ -d "/usr/src/app" ] && exit 0
 
 # For SCL enablement
-source .bashrc
+#source .bashrc
 
 set -e
 
 if [ "$1" = "-h" ]; then
-  exec /usr/local/sti/usage
+  exec /usr/share/sti/usage
 fi
 
 # Global modules good to have
