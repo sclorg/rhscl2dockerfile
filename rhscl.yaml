@@ -140,8 +140,8 @@ templates:
 containers:
   mariadb55:
     name: MariaDB 5.5
-    # gettext for envsubst, hostname for initdb
-    install: mariadb55 hostname gettext
+    # gettext for envsubst, hostname for initdb, which for scripts
+    install: mariadb55 hostname gettext which
     expose: [3306]
     envs:
       - "HOME            /var/lib/mysql"
@@ -160,8 +160,8 @@ containers:
     pidfile: /var/run/mariadb/mariadb.pid
   mysql55:
     name: MySQL 5.5
-    # gettext for envsubst, hostname for initdb
-    install: mysql55 hostname gettext
+    # gettext for envsubst, hostname for initdb, which for scripts
+    install: mysql55 hostname gettext which
     expose: [3306]
     envs:
       - "HOME            /var/lib/mysql"
@@ -306,8 +306,8 @@ containers:
     install: rh-java-common
   rh-mariadb100:
     name: MariaDB 10.0
-    # gettext for envsubst, hostname for initdb
-    install: rh-mariadb100 hostname gettext
+    # gettext for envsubst, hostname for initdb, which for scripts
+    install: rh-mariadb100 hostname gettext which
     expose: [3306]
     envs:
       - "HOME            /var/lib/mysql"
@@ -351,8 +351,8 @@ containers:
     cmd: ["cont-mongod"]
   rh-mysql56:
     name: MySQL 5.6
-    # gettext for envsubst, hostname for initdb
-    install: rh-mysql56 hostname gettext
+    # gettext for envsubst, hostname for initdb, which for scripts
+    install: rh-mysql56 hostname gettext which
     expose: [3306]
     envs:
       - "HOME            /var/lib/mysql"
