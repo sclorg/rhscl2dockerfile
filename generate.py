@@ -135,6 +135,8 @@ class CollectionGenerator:
             self.cvars["collection"] = self.collection
         if 'enable' not in self.cvars:
             self.cvars["enable"] = [self.cvars["collection"]]
+        if 'name' not in self.cvars:
+            self.cvars["name"] = self.cvars["collection"]
 
 
     def generate(self, outdir):
