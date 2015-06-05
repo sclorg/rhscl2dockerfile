@@ -10,17 +10,11 @@ fi
 
 if [ -n "$MONGODB_QUIET" ]; then
     update_option quiet $MONGODB_QUIET $mongod_config_file
+    update_option quiet $MONGODB_QUIET $mongos_config_file
 fi
 
-MONGODB_AUTH=false
-
-if [ ! -f /var/lib/mongodb/data/.mongodb_users_created ]; then
-
-    if [ -z "${MONGODB_USER}" -o -z "${MONGODB_PASSWORD}" -o -z "${MONGODB_DATABASE}" -o -z "${MONGODB_ADMIN_PASSWORD}" ]; then
-        # Print container-usage and exit
-        container-usage
-        exit 1
-    fi
-
-    MONGODB_AUTH=true
+if [ -z "${MONGODB_USER}" -o -z "${MONGODB_PASSWORD}" -o -z "${MONGODB_DATABASE}" -o -z "${MONGODB_ADMIN_PASSWORD}" ]; then
+    # Print container-usage and exit
+    container-usage
+    exit 1
 fi

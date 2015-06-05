@@ -53,18 +53,28 @@ function mongo_create_user() {
     fi
 }
 
-if [ "${MONGODB_AUTH}" = "true" ]; then
+dbpath=${dbpath:-$HOME/data}
 
+if [ ! -f $dbpath/.mongodb_datadir_initialized  ]; then
+    # Create specified database user
     if [ -n "${MONGODB_USER}" -a -n "${MONGODB_PASSWORD}" -a -n "${MONGODB_DATABASE}" ]; then
         # Create database user
         mongo_create_user
     fi
 
+    # Create admin user
     if [ -n "${MONGODB_ADMIN_PASSWORD}" ]; then
         # Create admin user
         mongo_create_admin
     fi
 
-    # Enable auth
-    mongod_common_args+="--auth "
+    # To indicate that database have beed initialized (users are created in it)
+    touch $dbpath/.mongodb_datadir_initialized
+
+    if [ -n "${MONGODB_USER}" -a -n "${MONGODB_PASSWORD}" -a -n "${MONGODB_DATABASE}" ] || [ -n "${MONGODB_ADMIN_PASSWORD}" ]; then
+        # Enable auth
+        mongod_common_args+="--auth "
+    fi
+else
+    echo "=> Database directory is already initialized. Skipping creation of users ..."
 fi

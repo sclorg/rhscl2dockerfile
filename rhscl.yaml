@@ -187,13 +187,12 @@ containers:
       - [mongodb/base-functions.sh, base-functions.sh, /usr/share/cont-layer/mongodb/common/]
       - [mongodb/20-openshift-preinit.sh, 20-openshift-pre.sh, /usr/share/cont-layer/mongodb/pre-init.d/]
       - [mongodb/50-init-users.sh.tpl, 50-init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
-      - [mongodb/80-openshift.sh, 80-openshift.sh, /usr/share/cont-layer/mongodb/init.d/]
       - [mongodb/80-init-users-postinit.sh, 80-init-users-post.sh, /usr/share/cont-layer/mongodb/post-init.d/]
     files:
       - [mongodb/README.md.tpl, usr/share/cont-docs/10-mongodb.txt]
     run:
-      - mkdir -p /var/lib/mongodb/data /var/run/mongodb
-      - chown -R mongodb:mongodb /var/lib/mongodb/ /var/run/mongodb /etc/mongod.conf /etc/mongos.conf
+      - mkdir -p /var/lib/mongodb/data /var/run/mongodb /var/log/mongodb
+      - chown -R mongodb:mongodb /var/lib/mongodb/ /var/run/mongodb /var/log/mongodb /etc/mongod.conf /etc/mongos.conf
       - restorecon -R /var/lib/mongodb/
     readme:
       - mongodb/README.md.tpl
@@ -336,13 +335,12 @@ containers:
       - [mongodb/base-functions.sh, base-functions.sh, /usr/share/cont-layer/mongodb/common/]
       - [mongodb/20-openshift-preinit.sh, 20-openshift-pre.sh, /usr/share/cont-layer/mongodb/pre-init.d/]
       - [mongodb/50-init-users.sh.tpl, 50-init-users.sh, /usr/share/cont-layer/mongodb/init.d/]
-      - [mongodb/80-openshift.sh, 80-openshift.sh, /usr/share/cont-layer/mongodb/init.d/]
       - [mongodb/80-init-users-postinit.sh, 80-init-users-post.sh, /usr/share/cont-layer/mongodb/post-init.d/]
     files:
       - [mongodb/README.md.tpl, usr/share/cont-docs/10-mongodb.txt]
     run:
-      - mkdir -p /var/lib/mongodb/data /var/run/mongodb
-      - chown -R mongodb:mongodb /var/lib/mongodb/ /var/run/mongodb /etc/mongod.conf /etc/mongos.conf
+      - mkdir -p /var/lib/mongodb/data /var/run/mongodb /var/log/mongodb
+      - chown -R mongodb:mongodb /var/lib/mongodb/ /var/run/mongodb /var/log/mongodb /etc/mongod.conf /etc/mongos.conf
       - restorecon -R /var/lib/mongodb/
     readme:
       - mongodb/README.md.tpl
