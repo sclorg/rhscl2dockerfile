@@ -1,10 +1,14 @@
 {% if expose is defined %}{% for port in expose %}
 EXPOSE {{ port }}
 {%- endfor %}{% endif %}
-
-{%- if envs is defined %}{% for e in envs %}
-ENV {{ e }}
-{%- endfor -%}{% endif %}
+{% if envs is defined %}
+ENV
+{%- for e in envs %}	{{ e }}{% if not loop.last %} \{% endif %}
+{% endfor -%}{% endif %}
+{% if labels is defined -%}
+LABEL
+{%- for l, v in labels.iteritems() %}	{{ l }}="{{ v }}" {% if not loop.last %} \{% endif %}
+{% endfor -%}{% endif %}
 
 {%- if add_files is defined %}{% for f in add_files %}
 ADD {{ f['src'] }} {{ f['dst'] }}
