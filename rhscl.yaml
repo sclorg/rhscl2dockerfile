@@ -69,13 +69,12 @@ templates:
           autoconf \
           automake \
           bsdtar \
-          curl-devel \
-          epel-release \
           findutils \
           gcc-c++ \
           gdb \
           gettext \
           git \
+          libcurl-devel \
           libxml2-devel \
           libxslt-devel \
           lsof \
@@ -83,6 +82,7 @@ templates:
           mysql-devel \
           mysql-libs \
           openssl-devel \
+          patch \
           postgresql-devel \
           procps-ng \
           scl-utils \
