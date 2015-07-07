@@ -60,7 +60,10 @@ templates:
       - [README.tpl, README.md]
     envs:
       - "BASH_ENV=/etc/profile.d/cont-env.sh"
+    user: 1001
+    entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["container-usage"]
+    platform: RHEL-6
     devel_libs: &devellibs |
       \
           autoconf \
@@ -102,7 +105,10 @@ templates:
       - [README.tpl, README.md]
     envs:
       - "BASH_ENV=/etc/profile.d/cont-env.sh"
+    user: 1001
+    entrypoint: ["/usr/bin/container-entrypoint"]
     cmd: ["container-usage"]
+    platform: RHEL-7
     devel_libs: *devellibs
 
 # For each container to define, define packages parameter to yum
@@ -117,7 +123,8 @@ containers:
       k8s.io/description: *mariadb55desc
       openshift.io/tags: database,mysql,mariadb,mariadb55
       openshift.io/expose-services: 3306:mysql
-    install: mariadb55 hostname
+    # gettext for envsubst, hostname for initdb, which for scripts
+    install: mariadb55 hostname gettext which
     expose: [3306]
     envs:
       - "MARIADB_VERSION=5.5"
@@ -131,7 +138,7 @@ containers:
     readme:
       - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
-    user: mysql
+    user: 27
     cmd: ["cont-mysqld"]
     logfile: /var/log/mariadb/mariadb.log
     pidfile: /var/run/mariadb/mariadb.pid
@@ -144,7 +151,8 @@ containers:
       k8s.io/description: *mysql55desc
       openshift.io/tags: database,mysql,mysql55
       openshift.io/expose-services: 3306:mysql
-    install: mysql55 hostname
+    # gettext for envsubst, hostname for initdb, which for scripts
+    install: mysql55 hostname gettext which
     expose: [3306]
     envs:
       - "MYSQL_VERSION=5.5"
@@ -158,7 +166,7 @@ containers:
     readme:
       - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
-    user: mysql
+    user: 27
     cmd: ["cont-mysqld"]
     logfile: /var/log/mysql/mysqld.log
     pidfile: /var/run/mysql/mysqld.pid
@@ -193,7 +201,7 @@ containers:
     readme:
       - mongodb/README.md.tpl
     volume: /var/lib/mongodb/data
-    user: mongodb
+    user: 184
     cmd: ["cont-mongod"]
 
   httpd24:
@@ -329,8 +337,7 @@ containers:
     run:
       - /usr/libexec/cont-setup
     volume: ["/var/lib/pgsql/data"]
-    user: postgres
-    entrypoint: ["/usr/bin/container-entrypoint"]
+    user: 26
     cmd: ["cont-postgresql-cmd"]
 
   python27:
@@ -423,7 +430,8 @@ containers:
       k8s.io/description: *rh-mariadb100desc
       openshift.io/tags: database,mysql,mariadb,rh-mariadb100
       openshift.io/expose-services: 3306:mysql
-    install: rh-mariadb100
+    # gettext for envsubst, hostname for initdb, which for scripts
+    install: rh-mariadb100 hostname gettext which
     expose: [3306]
     envs:
       - "MARIADB_VERSION=10.0"
@@ -437,7 +445,7 @@ containers:
     readme:
       - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
-    user: mysql
+    user: 27
     cmd: ["cont-mysqld"]
     logfile: /var/log/mariadb/mariadb.log
     pidfile: /var/run/mariadb/mariadb.pid
@@ -472,7 +480,7 @@ containers:
     readme:
       - mongodb/README.md.tpl
     volume: /var/lib/mongodb/data
-    user: mongodb
+    user: 184
     cmd: ["cont-mongod"]
 
   rh-mysql56:
@@ -483,7 +491,8 @@ containers:
       k8s.io/description: *rh-mysql56desc
       openshift.io/tags: database,mysql,rh-mysql56
       openshift.io/expose-services: 3306:mysql
-    install: rh-mysql56
+    # gettext for envsubst, hostname for initdb, which for scripts
+    install: rh-mysql56 hostname gettext which
     expose: [3306]
     envs:
       - "MYSQL_VERSION=5.6"
@@ -497,7 +506,7 @@ containers:
     readme:
       - mysql-common/usr/share/cont-docs/30-mysql.txt.tpl
     volume: ["/var/lib/mysql/data"]
-    user: mysql
+    user: 27
     cmd: ["cont-mysqld"]
     logfile: /var/log/mysql/mysqld.log
     pidfile: /var/run/mysql/mysqld.pid

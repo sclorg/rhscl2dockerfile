@@ -40,6 +40,9 @@ sed -ie 's/^\([^#]*log[-_]error=.*\)$/# logging to stderr \n# \1/g' ${MYSQL_CONF
 chown -R mysql:mysql ${MYSQL_CONFIG_FILE}.d
 restorecon -R ${MYSQL_CONFIG_FILE}.d
 
+# we provide own config files for the container, so clean what rpm ships here
+rm -f ${MYSQL_CONFIG_FILE}.d/*
+
 # setup directory for data, log file and pid file
 for dir in /var/lib/mysql{,/data} $(dirname {{ logfile }}) $(dirname {{ pidfile }}) ; do
     mkdir -p $dir
