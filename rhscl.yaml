@@ -111,6 +111,40 @@ templates:
     platform: RHEL-7
     devel_libs: *devellibs
 
+  centos6:
+    add:
+      - [common/enable.sh.tpl, "enable{{collection}}.sh", /usr/share/cont-layer/common/env/]
+      - [common/cont-lib/usr, usr, /]
+      - [common/cont-lib/etc, etc, /]
+      - [common/cont-lib/root, root, /]
+    files:
+      - [Dockerfile.centos6.tpl, Dockerfile]
+      - [README.tpl, README.md]
+    envs:
+      - "BASH_ENV=/etc/profile.d/cont-env.sh"
+    user: 1001
+    entrypoint: ["/usr/bin/container-entrypoint"]
+    cmd: ["container-usage"]
+    platform: RHEL-7
+    devel_libs: *devellibs
+
+  centos7:
+    add:
+      - [common/enable.sh.tpl, "enable{{collection}}.sh", /usr/share/cont-layer/common/env/]
+      - [common/cont-lib/usr, usr, /]
+      - [common/cont-lib/etc, etc, /]
+      - [common/cont-lib/root, root, /]
+    files:
+      - [Dockerfile.centos7.tpl, Dockerfile]
+      - [README.tpl, README.md]
+    envs:
+      - "BASH_ENV=/etc/profile.d/cont-env.sh"
+    user: 1001
+    entrypoint: ["/usr/bin/container-entrypoint"]
+    cmd: ["container-usage"]
+    platform: RHEL-7
+    devel_libs: *devellibs
+
 # For each container to define, define packages parameter to yum
 # install plus list of ports to expose.  The SCL collection name must
 # be defined if not the name used here.
