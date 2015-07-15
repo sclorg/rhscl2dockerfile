@@ -453,6 +453,13 @@ containers:
     collection: devtoolset-3
     install: devtoolset-3-valgrind
 
+  devtoolset-4:
+    install: devtoolset-4
+
+  devtoolset-4-toolchain:
+    collection: devtoolset-4
+    install: devtoolset-4-gcc devtoolset-4-gcc-c++ devtoolset-4-gcc-gfortran devtoolset-4-gdb
+
   rh-java-common:
     install: rh-java-common
 
