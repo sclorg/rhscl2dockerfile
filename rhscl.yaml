@@ -462,6 +462,32 @@ containers:
     collection: devtoolset-4
     install: devtoolset-4-gcc devtoolset-4-gcc-c++ devtoolset-4-gcc-gfortran devtoolset-4-gdb
 
+  devtoolset-4-systemtap:
+    collection: devtoolset-3
+    install: devtoolset-3-systemtap
+    expose: [5353]
+    privileged: 1
+    files:
+      - [ systemtap.txt.tpl, usr/share/cont-docs/systemtap.txt ]
+    readme:
+      - systemtap.txt.tpl
+
+  devtoolset-4-dyninst:
+    collection: devtoolset-4
+    install: devtoolset-4-dyninst
+
+  devtoolset-4-elfutils:
+    collection: devtoolset-4
+    install: devtoolset-4-elfutils
+
+  devtoolset-4-oprofile:
+    collection: devtoolset-4
+    install: devtoolset-4-oprofile
+
+  devtoolset-4-valgrind:
+    collection: devtoolset-4
+    install: devtoolset-4-valgrind
+
   rh-java-common:
     install: rh-java-common
 
