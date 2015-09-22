@@ -463,8 +463,8 @@ containers:
     install: devtoolset-4-gcc devtoolset-4-gcc-c++ devtoolset-4-gcc-gfortran devtoolset-4-gdb
 
   devtoolset-4-systemtap:
-    collection: devtoolset-3
-    install: devtoolset-3-systemtap
+    collection: devtoolset-4
+    install: devtoolset-4-systemtap
     expose: [5353]
     privileged: 1
     files:
